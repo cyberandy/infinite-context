@@ -1,0 +1,19 @@
+# Virtual environment
+.venv/
+
+# Environment variables
+.env
+
+# Large video files (use GCS for these)
+*.mp4
+videos/
+videos_v3/
+videos_v3_narrated/
+
+# Audio files
+audio_v3/
+
+# Temporary files
+__pycache__/
+*.pyc
+/tmp/
