@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Generate V4 presentation videos in strict Swiss International Typographic Style.
+Generate V4.1 presentation videos — motion-only prompts (no text rendering).
 
 Uses Veo 3.1 on Vertex AI to animate existing slide PNGs with restrained,
-grid-disciplined motion prompts.
+grid-disciplined motion. Prompts describe ONLY motion behavior; the source
+image provides all text and layout.
 
 Usage:
     python generate_v4.py [--start-from N] [--only N] [--check]
@@ -20,181 +21,144 @@ from google.genai import types
 
 
 # ── Swiss Style preamble (prepended to every animation prompt) ──
+# Focuses on motion style and anti-hallucination guardrails.
 SWISS_PREAMBLE = (
-    "A 16:9 presentation slide in strict Swiss International Typographic Style. "
-    "White background, modular grid, asymmetric flush-left layout. "
-    "Neo-grotesk sans-serif typography similar to Helvetica. "
-    "Black text, cool gray secondary, single vivid red accent only when "
-    "functionally needed. No centered text, no decorative elements, no icons, "
-    "no gradients, no shadows. Print-poster editorial clarity. "
-    "Locked-off frontal camera, very subtle fade-in and micro-parallax motion only. "
-    "Museum-grade modernist design system. ENGLISH TEXT ONLY. "
+    "Animate this presentation slide with very subtle, restrained motion. "
+    "Locked-off frontal camera, no rotation, no camera movement. "
+    "DO NOT add, remove, or modify any text or labels on the slide. "
+    "DO NOT generate any new text characters. "
+    "Keep the existing slide content exactly as shown in the image. "
+    "White background, clean editorial feel, Swiss modernist design. "
 )
 
-# ── 20 slides: (source_filename, animation_prompt_suffix) ──
+# ── 20 slides: (source_filename, motion_prompt) ──
+# Prompts describe ONLY what should move, never what text to create.
 SLIDES = [
     # ── Ch 1: Infinite Context ──
     ("01_ch1_title.png",
-     "Oversized flush-left chapter number '01' in light gray at top-left. "
-     "Title 'Infinite Context' flush-left in black, bold, very large, below the number. "
-     "A single thin red horizontal rule draws in slowly from the left edge. "
-     "Tiny label 'Andrea Volpini · WordLift' bottom-left in light gray. "
-     "Elements fade in sequentially on the modular grid. Restrained, elegant."),
+     "Gentle slow zoom into the slide from slightly wider framing. "
+     "The large title text remains sharp and static. "
+     "A thin red horizontal line draws in from the left edge. "
+     "Subtle parallax between the large number and the title. "
+     "Elegant, minimal reveal."),
 
     ("02_context.png",
-     "Flush-left headline 'What Is Context?' in bold black at top-left. "
-     "Below on the grid: a clean horizontal bar diagram. A narrow black rectangle "
-     "labeled 'visible' occupies the left portion of a longer gray bar labeled "
-     "'context window'. Tiny caption 'The working memory of a language model.' "
-     "flush-left in gray at bottom-left. The black bar fills in with gentle "
-     "linear animation from left to right."),
+     "The slide content fades in gently from transparent to fully visible. "
+     "The horizontal bar diagram fills in with a smooth left-to-right "
+     "animation, the highlighted section appearing first. "
+     "Very subtle micro-parallax. Clean, restrained."),
 
     ("03_quadratic.png",
-     "Flush-left headline 'The Quadratic Wall' in bold black at top-left. "
-     "Minimal bar chart on the grid: one short black bar labeled 'N tokens', "
-     "one tall red bar labeled '2N tokens = 4x cost'. Thin gray grid lines. "
-     "Flush-left caption 'Doubling context quadruples the cost.' in small gray text. "
-     "Clean chart-drawing animation, bars grow upward from baseline."),
+     "The bar chart elements animate: bars grow upward smoothly from "
+     "the baseline. The short bar appears first, then the tall bar grows "
+     "dramatically taller. Network diagram nodes gently pulse once. "
+     "Minimal, analytical, data-visualization feel."),
 
     ("04_race.png",
-     "Flush-left headline 'The Context Race' in bold black at top-left. "
-     "Staircase step chart with thin black lines ascending right: "
-     "2020: 2K, 2022: 32K, 2023: 128K, 2024: 2M, 2026: 10M+. "
-     "The final 10M+ step highlighted with solid red fill. "
-     "Caption 'But is more context window enough?' flush-left in gray. "
-     "Stairs draw in step by step, left to right."),
+     "The staircase chart draws in step by step from left to right, "
+     "each step appearing in sequence. The final tallest step gains "
+     "a subtle glow or highlight. Smooth, clean timing. "
+     "Restrained, editorial chart animation."),
 
     # ── Ch 2: Architecture ──
     ("05_ch2_title.png",
-     "Oversized flush-left chapter number '02' in light gray at top-left. "
-     "Title 'Architecture' flush-left in black, bold, very large. "
-     "A single thin red horizontal rule draws in from the left edge. "
-     "Same grid system as chapter 1. Elements fade in sequentially."),
+     "Gentle slow zoom into the slide. "
+     "A thin red horizontal line draws in from the left edge. "
+     "Subtle parallax between the large number and the title below it. "
+     "Minimal, elegant chapter reveal. Same feel as opening slide."),
 
     ("06_stretching.png",
-     "Flush-left headline 'Stretching the Window' in bold black at top-left. "
-     "Three clean text rows flush-left, separated by thin gray hairlines: "
-     "'Compressive Memory — Infini-attention', "
-     "'State Space Models — Mamba · SAMBA', "
-     "'RoPE Scaling — LongRoPE2'. "
-     "No icons. Caption 'Three ways to rewire the brain for more input.' "
-     "Rows slide in one by one from left with subtle stagger."),
+     "Three rows of content appear one by one with subtle slide-in "
+     "from the left, staggered timing. Each row settles precisely "
+     "on the grid. Thin hairline separators draw in. "
+     "Clean sequential reveal, no bounce."),
 
     ("07_ceiling.png",
-     "Flush-left headline 'The Ceiling' in bold black at top-left. "
-     "Clean line chart with thin black axes: accuracy curve plateaus then "
-     "curves downward. A single red dot marks the inflection point with tiny "
-     "red label 'Context Rot'. Caption 'More input does not mean better "
-     "understanding.' flush-left in gray. Line draws smoothly left to right."),
+     "The line chart curve draws smoothly from left to right. "
+     "The curve plateaus, then bends downward. "
+     "A red indicator point appears at the inflection. "
+     "Minimal, analytical data animation. Locked-off camera."),
 
     ("08_tworoutes.png",
-     "Flush-left headline 'Two Routes' in bold black at top-left. "
-     "Two-column layout with a thin vertical black divider line. "
-     "Left column: 'Architectural' in bold black, 'Bigger brain' in gray below. "
-     "Right column: 'Philosophical' in bold black, 'Smarter memory' in gray below. "
-     "Caption 'Neither solved it alone.' flush-left in bold. "
-     "Left column fades in, then right column fades in."),
+     "Two-column layout reveals sequentially: left column content "
+     "fades in first, then the vertical dividing line draws downward, "
+     "then right column fades in. Balanced, deliberate timing. "
+     "Clean separation, Swiss grid discipline."),
 
     # ── Ch 3: Memory ──
     ("09_ch3_title.png",
-     "Oversized flush-left chapter number '03' in light gray at top-left. "
-     "Title 'Memory' flush-left in black, bold, very large. "
-     "A single thin red horizontal rule draws in from the left edge. "
-     "Same strict grid system. Elements fade in sequentially."),
+     "Gentle slow zoom into the slide. "
+     "A thin red horizontal line draws in from the left edge. "
+     "Subtle parallax between the large number and the title. "
+     "Minimal, elegant chapter reveal."),
 
     ("10_virtual.png",
-     "Flush-left headline 'Virtual Memory for LLMs' in bold black at top-left. "
-     "Three clean horizontal bars stacked flush-left with different widths: "
-     "small black bar 'Main Context (RAM)', medium gray bar 'Recall Storage (Cache)', "
-     "large light-gray bar 'Archival (Vector DB)'. "
-     "Red label 'Letta / MemGPT' flush-left. "
-     "Caption 'Small fast window, unbounded system memory.' "
-     "Bars slide in from left, staggered timing."),
+     "Three horizontal bars slide in from the left with staggered "
+     "timing, each one slightly longer than the previous. "
+     "They lock precisely onto the grid. "
+     "Clean, modular, systematic animation."),
 
     ("11_rag.png",
-     "Flush-left headline 'Give It a Search Bar' in bold black at top-left, "
-     "spanning two lines. Clean horizontal flow diagram with thin black arrows: "
-     "'Query' then arrow then 'Database' then arrow then 'LLM'. "
-     "Red label 'Retrieval-Augmented Generation' flush-left below diagram. "
-     "Caption 'Fetch only what is relevant.' Flow draws left to right."),
+     "Flow diagram arrows draw in from left to right in sequence. "
+     "Each element in the chain appears after the arrow reaches it. "
+     "Smooth, logical left-to-right reveal. "
+     "Clean, minimal, analytical."),
 
     ("12_rlm.png",
-     "Flush-left headline 'Enter Recursive Language Models' in bold black, "
-     "spanning two lines at top-left. Two-column comparison below: "
-     "left flush 'Standard LLM' bold with 'Speed reader' in gray, "
-     "right 'RLM' bold with 'Librarian' in red. Thin black dividing rule between. "
-     "Caption 'Context as an environment to explore, not a buffer to fill.' "
-     "Elements slide in left then right."),
+     "Two-column comparison reveals: left side slides in from left, "
+     "pause, then right side slides in from right. "
+     "Arrow between them draws last. "
+     "Clean Swiss grid structure, deliberate pacing."),
 
     # ── Ch 4: Recursion ──
     ("13_ch4_title.png",
-     "Oversized flush-left chapter number '04' in light gray at top-left. "
-     "Title 'Recursion' flush-left in black, bold, very large. "
-     "A single thin red horizontal rule draws in from the left edge. "
-     "Same grid system. Elements fade in sequentially."),
+     "Gentle slow zoom into the slide. "
+     "A thin red horizontal line draws in from the left edge. "
+     "Subtle parallax between the large number and the title. "
+     "Minimal, elegant chapter reveal."),
 
     ("14_howrlm.png",
-     "Flush-left headline 'How RLMs Work' in bold black at top-left. "
-     "Clean flow diagram on the grid: rectangular box 'LLM' left, "
-     "thin black arrow labeled 'writes code' pointing right to rectangular box "
-     "'External REPL'. Return arrow below labeled 'Results'. "
-     "Red method labels 'search() · partition() · peek()' inside REPL box. "
-     "Caption 'The model explores programmatically, not by memorizing.' "
-     "Arrows draw in sequence, left to right then return."),
+     "Flow diagram animates: left box appears first, then an arrow "
+     "draws rightward to the second box. A return arrow draws below "
+     "going leftward. Smooth sequential reveal of the flow. "
+     "Clean, technical, restrained."),
 
     ("15_paper.png",
-     "Flush-left oversized headline 'RLM-on-KG' in bold black at top-left. "
-     "Red subtitle 'Autonomous navigator over RDF knowledge graph' flush-left. "
-     "Clean circular flow diagram below: Seed then Expand then Verify then "
-     "Collect then Re-rank, connected by thin black arrows. "
-     "Center label '9 tools' in gray. "
-     "Caption 'Entity-first exploration over structured data.' "
-     "Circle draws clockwise with smooth animation."),
+     "The circular flow diagram draws clockwise, each step appearing "
+     "in sequence around the circle. The center label fades in last. "
+     "Smooth, continuous rotational drawing motion. "
+     "Analytical, clean."),
 
     ("16_results.png",
-     "Flush-left headline 'Results' in bold black at top-left. "
-     "Large flush-left data display: 'F1: 45.8' in large bold black, "
-     "'F1: 45.6' in large gray, separated by a thin vertical black rule. "
-     "Below: red-outlined box containing '56 percent win rate when evidence "
-     "scattered across 11+ chunks'. "
-     "Caption 'RLMs win when structure matters most.' in bold. "
-     "Numbers fade in, then stat box draws its red border."),
+     "Large data numbers fade in with subtle scale-up animation. "
+     "Then a bordered box draws its outline around the key statistic. "
+     "Clean reveal hierarchy: headline, data, then callout box. "
+     "Minimal, confident, editorial."),
 
     # ── Ch 5: The SEO Playbook ──
     ("17_ch5_title.png",
-     "Oversized flush-left chapter number '05' in light gray at top-left. "
-     "Title 'The SEO Playbook' flush-left in black, bold, very large. "
-     "A single thin red horizontal rule draws in from the left edge. "
-     "Same grid system. Elements fade in sequentially."),
+     "Gentle slow zoom into the slide. "
+     "A thin red horizontal line draws in from the left edge. "
+     "Subtle parallax between the large number and the title. "
+     "Minimal, elegant chapter reveal."),
 
     ("18_oldnew.png",
-     "Flush-left headline 'From Crawl-Index-Rank to Explore-Verify-Cite' "
-     "in bold black at top-left, spanning two lines. "
-     "Old pipeline in gray with strikethrough: 'Crawl → Index → Rank', "
-     "small gray label 'The old pipeline' below. "
-     "New pipeline in bold black: 'Explore → Verify → Cite' with red arrow "
-     "accents, small label 'The new paradigm' below. "
-     "Caption 'AI agents navigate structured data.' flush-left. "
-     "Old text fades in then gets crossed out, new text slides in from left."),
+     "Top section fades in first, appearing muted and desaturated. "
+     "A strikethrough line draws across it. Then the bottom section "
+     "slides in from left, appearing bold and vivid. "
+     "Clean before-and-after juxtaposition."),
 
     ("19_optimize.png",
-     "Flush-left headline 'What to Optimize' in bold black at top-left. "
-     "Five flush-left text items separated by thin gray hairlines, each "
-     "preceded by a small solid red square: "
-     "'Stable URIs', 'Mention Links', 'Provenance Anchors', "
-     "'Entity Pages', 'Crawlable Endpoints'. "
-     "Caption 'Make your content navigable, not just embeddable.' "
-     "Items slide in one by one from left with clean stagger."),
+     "Five list items appear one by one from top to bottom, each "
+     "sliding in from the left with clean stagger. Small red squares "
+     "appear as bullet markers just before each line settles. "
+     "Systematic, precise, grid-aligned."),
 
     ("20_cta.png",
-     "Flush-left oversized headline 'Structure Is the New Moat' in bold black, "
-     "positioned upper-left on the grid. Body text in gray flush-left below: "
-     "'Connected data compounds in value under scaffolding. Schema.org, "
-     "Knowledge Graphs, entity markup — these are the surfaces agents explore.' "
-     "A thin red horizontal rule separates the credit line below: "
-     "'Andrea Volpini · WordLift' in black and "
-     "'github.com/wordlift/rlm-on-kg' in small gray, both flush-left. "
-     "Gentle fade-in for text, then rule draws from left."),
+     "The large headline fades in with a subtle float-up. "
+     "Body text fades in softer after a brief pause. "
+     "A thin red horizontal rule draws from left to right at the bottom. "
+     "Confident, final, decisive closing slide."),
 ]
 
 SLIDES_DIR = Path("slides_v3_16x9")
@@ -332,7 +296,7 @@ def concatenate(video_dir: Path, output: Path, total: int) -> bool:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate V4 Swiss Style presentation with Veo 3.1"
+        description="Generate V4.1 Swiss Style presentation with Veo 3.1 (motion-only prompts)"
     )
     parser.add_argument("--check", action="store_true", help="Pre-flight only")
     parser.add_argument("--start-from", type=int, default=1, help="Start from slide N")

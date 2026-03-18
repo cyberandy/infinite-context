@@ -37,7 +37,7 @@ SLIDES = [
     ("slide_20.gif", "Structure Is the New Moat"),
 ]
 
-GIFS_DIR = Path("gifs_v4")
+GIFS_DIR = Path("gifs_v4_480p")
 OUTPUT = Path("infinite_context_v4.pptx")
 
 # Standard 16:9 dimensions
