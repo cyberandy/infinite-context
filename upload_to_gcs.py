@@ -2,12 +2,17 @@
 """Upload slides and videos to GCS bucket using ADC."""
 
 import sys
+import os
 from pathlib import Path
 from google.cloud import storage
+from dotenv import load_dotenv
 
-PROJECT = "videogeneration-484813"
-BUCKET_NAME = "infinite-context-presentation"
-LOCATION = "us-central1"
+# Load environment variables
+load_dotenv()
+
+PROJECT = os.getenv("PROJECT_NUMBER") or os.getenv("PROJECT_NAME", "videogeneration-484813").split('/')[-1]
+BUCKET_NAME = os.getenv("GCS_BUCKET_NAME", "infinite-context-presentation")
+LOCATION = os.getenv("GCP_LOCATION", "us-central1")
 
 
 def ensure_bucket(client, bucket_name):

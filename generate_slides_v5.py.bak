@@ -1,0 +1,939 @@
+#!/usr/bin/env python3
+"""
+Generate 19 presentation slides as PNG files using HTML/CSS rendering.
+
+Design system: Müller-Brockmann Swiss International Typographic Style
+with implicit Cellular Automata rule patterns as visual substrate.
+
+Requires: playwright (pip install playwright && playwright install chromium)
+
+Usage:
+    python generate_slides_v5.py [--only N] [--preview]
+"""
+
+import argparse
+import asyncio
+import sys
+from pathlib import Path
+
+# ── Slide Definitions ──
+# Each slide: (filename, act, html_generator_function_name)
+
+SLIDES_DIR = Path("slides_v5")
+
+# ── Design Tokens ──
+TOKENS = {
+    "bg": "#FFFFFF",
+    "fg": "#000000",
+    "red": "#E63329",      # Swiss red
+    "gray": "#B0B0B0",     # Cool gray
+    "gray_light": "#E8E8E8",
+    "gray_dark": "#4A4A4A",
+    "blue": "#2D5BFF",     # Accent for data
+    "font": "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif",
+    "width": 1920,
+    "height": 1080,
+}
+
+# ── Rule 30 Pattern (Chaos) — Act I ──
+def rule30_row(prev):
+    """Generate next row using Wolfram Rule 30."""
+    n = len(prev)
+    row = [0] * n
+    for i in range(n):
+        l = prev[(i - 1) % n]
+        c = prev[i]
+        r = prev[(i + 1) % n]
+        pattern = (l << 2) | (c << 1) | r
+        row[i] = (30 >> pattern) & 1
+    return row
+
+def generate_rule30_grid(rows=20, cols=60):
+    """Generate Rule 30 CA grid as list of rows."""
+    grid = []
+    first = [0] * cols
+    first[cols // 2] = 1
+    grid.append(first)
+    for _ in range(rows - 1):
+        grid.append(rule30_row(grid[-1]))
+    return grid
+
+# ── Rule 90 Pattern (Sierpinski) — Acts II & IV ──
+def rule90_row(prev):
+    """Generate next row using Wolfram Rule 90 (XOR of neighbors)."""
+    n = len(prev)
+    row = [0] * n
+    for i in range(n):
+        l = prev[(i - 1) % n]
+        r = prev[(i + 1) % n]
+        row[i] = l ^ r
+    return row
+
+def generate_rule90_grid(rows=20, cols=60):
+    """Generate Rule 90 CA grid (Sierpinski triangle)."""
+    grid = []
+    first = [0] * cols
+    first[cols // 2] = 1
+    grid.append(first)
+    for _ in range(rows - 1):
+        grid.append(rule90_row(grid[-1]))
+    return grid
+
+# ── Rule 110 Pattern (Turing-complete) — Acts III & V ──
+def rule110_row(prev):
+    """Generate next row using Wolfram Rule 110."""
+    n = len(prev)
+    row = [0] * n
+    for i in range(n):
+        l = prev[(i - 1) % n]
+        c = prev[i]
+        r = prev[(i + 1) % n]
+        pattern = (l << 2) | (c << 1) | r
+        row[i] = (110 >> pattern) & 1
+    return row
+
+def generate_rule110_grid(rows=20, cols=60):
+    """Generate Rule 110 CA grid."""
+    grid = []
+    first = [0] * cols
+    first[-1] = 1  # Rule 110 starts from right
+    grid.append(first)
+    for _ in range(rows - 1):
+        grid.append(rule110_row(grid[-1]))
+    return grid
+
+# ── CA Grid to SVG ──
+def ca_grid_to_svg(grid, cell_size=8, active_color="#E63329", inactive_color="#F0F0F0",
+                   opacity=0.15, x_offset=0, y_offset=0):
+    """Convert a CA grid to SVG rect elements."""
+    rects = []
+    for r, row in enumerate(grid):
+        for c, val in enumerate(row):
+            color = active_color if val else inactive_color
+            alpha = opacity if val else opacity * 0.3
+            x = x_offset + c * cell_size
+            y = y_offset + r * cell_size
+            rects.append(
+                f'<rect x="{x}" y="{y}" width="{cell_size}" height="{cell_size}" '
+                f'fill="{color}" opacity="{alpha}" />'
+            )
+    return "\n".join(rects)
+
+
+# ── Base HTML Template ──
+def base_html(body_content, ca_svg=""):
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{
+    width: {TOKENS['width']}px;
+    height: {TOKENS['height']}px;
+    background: {TOKENS['bg']};
+    font-family: {TOKENS['font']};
+    color: {TOKENS['fg']};
+    overflow: hidden;
+    position: relative;
+  }}
+  .ca-layer {{
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }}
+  .content {{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 80px 100px;
+    display: flex;
+    flex-direction: column;
+  }}
+  .headline {{
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    text-align: left;
+  }}
+  .subhead {{
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: {TOKENS['gray_dark']};
+    margin-top: 24px;
+    max-width: 1200px;
+  }}
+  .byline {{
+    font-size: 20px;
+    font-weight: 400;
+    color: {TOKENS['gray']};
+    margin-top: auto;
+  }}
+  .callout {{
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: {TOKENS['gray_dark']};
+    border-left: 4px solid {TOKENS['red']};
+    padding-left: 24px;
+    margin-top: 32px;
+    max-width: 1400px;
+    font-style: italic;
+  }}
+  .red {{ color: {TOKENS['red']}; }}
+  .accent-wedge {{
+    position: absolute;
+    z-index: 0;
+  }}
+  .two-col {{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 48px;
+    flex: 1;
+  }}
+  .col-label {{
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: {TOKENS['gray']};
+    margin-bottom: 24px;
+  }}
+  .col-item {{
+    font-size: 24px;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    padding-left: 20px;
+    border-left: 3px solid {TOKENS['gray_light']};
+  }}
+  .col-item.active {{
+    border-left-color: {TOKENS['red']};
+    color: {TOKENS['fg']};
+  }}
+  .numbered-item {{
+    display: flex;
+    gap: 24px;
+    margin-bottom: 40px;
+    align-items: flex-start;
+  }}
+  .numbered-item .num {{
+    font-size: 48px;
+    font-weight: 800;
+    color: {TOKENS['red']};
+    line-height: 1;
+    min-width: 60px;
+  }}
+  .numbered-item .text {{
+    font-size: 26px;
+    line-height: 1.5;
+  }}
+  .numbered-item .text strong {{
+    font-size: 28px;
+    display: block;
+    margin-bottom: 4px;
+  }}
+  table {{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 32px;
+    font-size: 22px;
+  }}
+  th {{
+    text-align: left;
+    padding: 16px 20px;
+    border-bottom: 3px solid {TOKENS['fg']};
+    font-weight: 700;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }}
+  td {{
+    padding: 14px 20px;
+    border-bottom: 1px solid {TOKENS['gray_light']};
+    vertical-align: top;
+  }}
+  tr.highlight td {{
+    background: #FFF5F5;
+    font-weight: 700;
+  }}
+  .section-label {{
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: {TOKENS['red']};
+    margin-bottom: 16px;
+  }}
+  .big-quote {{
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.4;
+    max-width: 1400px;
+  }}
+  .step-box {{
+    background: {TOKENS['gray_light']};
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    border-left: 5px solid {TOKENS['red']};
+  }}
+  .step-box .step-label {{
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: {TOKENS['red']};
+    margin-bottom: 8px;
+  }}
+  .step-box p {{
+    font-size: 22px;
+    line-height: 1.5;
+  }}
+  .four-quad {{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+    flex: 1;
+  }}
+  .quad {{
+    padding: 32px;
+    background: {TOKENS['gray_light']};
+    border-top: 4px solid {TOKENS['gray']};
+  }}
+  .quad.internal {{ border-top-color: {TOKENS['fg']}; }}
+  .quad.external {{ border-top-color: {TOKENS['red']}; }}
+  .quad h3 {{
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }}
+  .quad p {{
+    font-size: 18px;
+    line-height: 1.5;
+    color: {TOKENS['gray_dark']};
+  }}
+  .thesis-line {{
+    font-size: 32px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    color: {TOKENS['gray_dark']};
+  }}
+  .thesis-bold {{
+    font-size: 38px;
+    font-weight: 800;
+    line-height: 1.4;
+    color: {TOKENS['fg']};
+    margin-top: 24px;
+    margin-bottom: 24px;
+  }}
+  .thesis-action {{
+    font-size: 28px;
+    line-height: 1.6;
+    color: {TOKENS['fg']};
+  }}
+</style>
+</head>
+<body>
+  <div class="ca-layer">
+    <svg width="{TOKENS['width']}" height="{TOKENS['height']}" xmlns="http://www.w3.org/2000/svg">
+      {ca_svg}
+    </svg>
+  </div>
+  <div class="content">
+    {body_content}
+  </div>
+</body>
+</html>"""
+
+
+# ═══════════════════════════════════════════════════
+# SLIDE GENERATORS
+# ═══════════════════════════════════════════════════
+
+def slide_01():
+    """Act I — Title: Structure Is the Moat"""
+    grid = generate_rule30_grid(rows=40, cols=80)
+    ca = ca_grid_to_svg(grid, cell_size=12, opacity=0.08, x_offset=960, y_offset=200)
+    # Add red wedge
+    ca += f'''
+    <polygon points="1920,0 1920,1080 1200,1080" fill="{TOKENS['red']}" opacity="0.12" />
+    '''
+    body = f"""
+    <div class="section-label">SEO Week 2026</div>
+    <h1 class="headline" style="font-size:96px; margin-top: 40px;">Structure Is<br>the Moat</h1>
+    <p class="subhead" style="margin-top: 40px;">What the context explosion means for how AI<br>finds, navigates and ranks your content</p>
+    <p class="byline">Andrea Volpini · WordLift</p>
+    """
+    return base_html(body, ca)
+
+def slide_02():
+    """Act I — Why Context Has a Weight Problem"""
+    grid = generate_rule30_grid(rows=30, cols=60)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.06, x_offset=1200, y_offset=600)
+    body = f"""
+    <div class="section-label">Act I — The Context Explosion</div>
+    <h1 class="headline">Why Context Has a<br>Weight Problem</h1>
+    <div class="two-col" style="margin-top: 40px;">
+      <div>
+        <div class="col-label">Infrastructure</div>
+        <div class="col-item">KV Cache — memory scales quadratically with sequence length</div>
+        <div class="col-item">Vector DBs — compression degrades similarity scores</div>
+        <div class="col-item">On-Device — mobile models can't hold enterprise context</div>
+      </div>
+      <div>
+        <div class="col-label" style="color:{TOKENS['red']}">The Hidden Cost</div>
+        <div class="col-item active">AI Search Agents — every traversal step is a KV cache read. Context loss = worse answers</div>
+      </div>
+    </div>
+    <div class="callout">"When an AI agent loses context halfway through reasoning about your content, it doesn't tell you. It just gives a worse answer."</div>
+    """
+    return base_html(body, ca)
+
+def slide_03():
+    """Act I — Search Used to Be a Query. Now It's a Journey."""
+    grid = generate_rule30_grid(rows=25, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.05, x_offset=0, y_offset=800)
+    body = f"""
+    <div class="section-label">Act I — The Context Explosion</div>
+    <h1 class="headline" style="font-size:64px;">Search Used to Be a Query.<br><span class="red">Now It's a Journey.</span></h1>
+    <div class="two-col">
+      <div>
+        <div class="col-label">The Old Model</div>
+        <div class="col-item">User types query</div>
+        <div class="col-item">System scores documents against query</div>
+        <div class="col-item">Top-k retrieved, ranked by similarity</div>
+        <div class="col-item">One-shot. Stateless. Symmetric.</div>
+      </div>
+      <div>
+        <div class="col-label" style="color:{TOKENS['red']}">The Agent Model</div>
+        <div class="col-item active">Agent interprets intent</div>
+        <div class="col-item active">Agent seeds entities, traverses graph</div>
+        <div class="col-item active">Agent reads, verifies, backtracks</div>
+        <div class="col-item active">Multi-hop. Stateful. Asymmetric.</div>
+      </div>
+    </div>
+    <div class="callout">"Your content competes on reachability — can the agent find the evidence it needs by following the connections from what it already knows?"</div>
+    """
+    return base_html(body, ca)
+
+def slide_04():
+    """Act I — Three Shifts"""
+    grid = generate_rule30_grid(rows=20, cols=40)
+    ca = ca_grid_to_svg(grid, cell_size=14, opacity=0.06, x_offset=1400, y_offset=100)
+    body = f"""
+    <div class="section-label">Act I — The Context Explosion</div>
+    <h1 class="headline">Three Shifts That Changed<br>What 'Findable' Means</h1>
+    <div style="margin-top: 48px;">
+      <div class="numbered-item">
+        <div class="num">1</div>
+        <div class="text"><strong>From retrieval to navigation.</strong>Agents don't search — they explore. Your content needs to be traversable, not just indexable.</div>
+      </div>
+      <div class="numbered-item">
+        <div class="num">2</div>
+        <div class="text"><strong>From documents to entities.</strong>The unit of AI memory is the entity and its relationships, not the page. A page with no entity links is a dead end.</div>
+      </div>
+      <div class="numbered-item">
+        <div class="num">3</div>
+        <div class="text"><strong>From one model to a system.</strong>Compression, navigation and generation are now separate layers — each with its own failure mode.</div>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_05():
+    """Act II — The Compression Paradox"""
+    grid = generate_rule90_grid(rows=30, cols=60)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.08, x_offset=1100, y_offset=100)
+    body = f"""
+    <div class="section-label">Act II — The Compression Solution</div>
+    <h1 class="headline">The Compression Paradox</h1>
+    <p class="subhead">Why naive compression breaks relevance</p>
+    <div style="display:flex; gap:40px; margin-top:48px; flex:1;">
+      <div style="flex:1; padding:40px; border:3px solid {TOKENS['fg']}; text-align:center;">
+        <div style="font-size:48px; font-weight:800;">⊘</div>
+        <div style="font-size:22px; font-weight:700; margin-top:16px;">High Compression</div>
+        <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">Reduce memory cost</div>
+      </div>
+      <div style="flex:1; padding:40px; border:3px solid {TOKENS['fg']}; text-align:center;">
+        <div style="font-size:48px; font-weight:800;">∅</div>
+        <div style="font-size:22px; font-weight:700; margin-top:16px;">Zero Overhead</div>
+        <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">No codebook, no re-training</div>
+      </div>
+      <div style="flex:1; padding:40px; border:3px solid {TOKENS['red']}; text-align:center;">
+        <div style="font-size:48px; font-weight:800; color:{TOKENS['red']};">∠</div>
+        <div style="font-size:22px; font-weight:700; margin-top:16px;">Geometric Accuracy</div>
+        <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">Preserve inner products</div>
+      </div>
+    </div>
+    <div class="callout">"Every vector database compressing embeddings faces this paradox. Get it wrong and your similarity scores are silently biased."</div>
+    """
+    return base_html(body, ca)
+
+def slide_06():
+    """Act II — TurboQuant Architecture"""
+    grid = generate_rule90_grid(rows=25, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.06, x_offset=0, y_offset=700)
+    body = f"""
+    <div class="section-label">Act II — The Compression Solution</div>
+    <h1 class="headline" style="font-size:56px;">TurboQuant: Geometric Compression<br>Without Information Loss</h1>
+    <div style="display:flex; gap:60px; margin-top:40px; align-items:center;">
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:24px; margin-bottom:32px;">
+          <div style="background:{TOKENS['fg']}; color:white; padding:16px 24px; font-size:20px; font-weight:700;">STAGE 1</div>
+          <div style="font-size:24px;"><strong>PolarQuant</strong> — Norm + angle decomposition</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:24px; margin-bottom:32px;">
+          <div style="width:80px; text-align:center; font-size:32px;">→</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:24px;">
+          <div style="background:{TOKENS['red']}; color:white; padding:16px 24px; font-size:20px; font-weight:700;">STAGE 2</div>
+          <div style="font-size:24px;"><strong>QJL Transform</strong> — Zero-bias realignment</div>
+        </div>
+      </div>
+      <div style="flex:1; border-left:3px solid {TOKENS['gray_light']}; padding-left:40px;">
+        <div style="font-size:20px; font-weight:700; text-transform:uppercase; letter-spacing:2px; color:{TOKENS['gray']}; margin-bottom:16px;">The Result</div>
+        <div style="font-size:40px; font-weight:800; color:{TOKENS['red']};">4.5×</div>
+        <div style="font-size:18px; margin-bottom:16px;">smaller KV cache</div>
+        <div style="font-size:40px; font-weight:800; color:{TOKENS['red']};">8×</div>
+        <div style="font-size:18px; margin-bottom:16px;">faster attention on GPU</div>
+        <div style="font-size:40px; font-weight:800;">0</div>
+        <div style="font-size:18px;">degradation in retrieval recall</div>
+      </div>
+    </div>
+    <p class="subhead" style="font-size:22px; margin-top:24px;">Data-oblivious: no corpus-specific calibration. Works on product catalogs, knowledge bases and UGC without re-training.</p>
+    """
+    return base_html(body, ca)
+
+def slide_07():
+    """Act II — Silent Ranking Destruction"""
+    grid = generate_rule90_grid(rows=20, cols=40)
+    ca = ca_grid_to_svg(grid, cell_size=12, opacity=0.07, x_offset=1300, y_offset=200)
+    body = f"""
+    <div class="section-label">Act II — The Compression Solution</div>
+    <h1 class="headline" style="font-size:52px;">Why 'Compressing Your Embeddings'<br>Can <span class="red">Silently Destroy</span> Your Rankings</h1>
+    <div style="display:flex; gap:40px; margin-top:40px; flex:1;">
+      <div class="step-box" style="flex:1;">
+        <div class="step-label">The Math</div>
+        <p>MSE optimization introduces a systematic multiplicative bias (2/π at 1-bit) on inner products.</p>
+      </div>
+      <div class="step-box" style="flex:1;">
+        <div class="step-label">The System</div>
+        <p>Inner products are how your vector DB decides similarity. A biased inner product is a broken compass.</p>
+      </div>
+      <div class="step-box" style="flex:1; border-left-color:{TOKENS['fg']};">
+        <div class="step-label" style="color:{TOKENS['fg']};">The Consequence</div>
+        <p>Documents that should rank first don't. The effect is invisible in your logs.</p>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_08():
+    """Act II — 1-Bit Zero-Bias Realignment"""
+    grid = generate_rule90_grid(rows=30, cols=80)
+    ca = ca_grid_to_svg(grid, cell_size=8, opacity=0.05, x_offset=100, y_offset=700)
+    body = f"""
+    <div class="section-label">Act II — The Compression Solution</div>
+    <h1 class="headline">The 1-Bit Zero-Bias<br>Realignment</h1>
+    <div style="display:flex; gap:60px; margin-top:48px; flex:1; align-items:flex-start;">
+      <div style="flex:1;">
+        <div style="font-size:24px; font-weight:700; margin-bottom:16px;">Quantized Johnson-Lindenstrauss (QJL)</div>
+        <p style="font-size:22px; line-height:1.6; color:{TOKENS['gray_dark']};">Random projection into 1-bit space with provably zero bias on inner product estimation.</p>
+        <div style="font-size:24px; font-weight:700; margin-top:32px; margin-bottom:16px;">Zero-Overhead Correction</div>
+        <p style="font-size:22px; line-height:1.6; color:{TOKENS['gray_dark']};">No codebook storage. No data-dependent calibration step. Correction is algebraic.</p>
+      </div>
+      <div style="flex:1; background:{TOKENS['gray_light']}; padding:40px; border-top:5px solid {TOKENS['red']};">
+        <div style="font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:3px; color:{TOKENS['red']}; margin-bottom:16px;">The Result for Search</div>
+        <p style="font-size:24px; line-height:1.6;">Inner product estimates are now <strong>provably unbiased</strong>. Your compressed vector index scores similarity with mathematical correctness. The relevance signals your search system depends on are preserved.</p>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_09():
+    """Act II — Quantization Landscape"""
+    grid = generate_rule90_grid(rows=15, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.05, x_offset=0, y_offset=850)
+    body = f"""
+    <div class="section-label">Act II — The Compression Solution</div>
+    <h1 class="headline">The Quantization Landscape</h1>
+    <table style="margin-top:32px;">
+      <tr style="background:{TOKENS['gray_light']};">
+        <th>Algorithm</th><th>Unbiased Inner Product</th><th>Zero Codebook</th><th>GPU Friendly</th><th>Data-Oblivious</th>
+      </tr>
+      <tr style="font-size:16px; color:{TOKENS['gray_dark']};">
+        <td style="font-weight:700;">What it means →</td><td>Accurate relevance</td><td>No re-training per corpus</td><td>Real-time indexing</td><td>Works on any content</td>
+      </tr>
+      <tr><td>Product Quantization</td><td style="color:{TOKENS['red']};">✗</td><td style="color:{TOKENS['red']};">✗</td><td style="color:{TOKENS['red']};">✗</td><td style="color:{TOKENS['red']};">✗</td></tr>
+      <tr><td>OPQ / RQ</td><td style="color:{TOKENS['red']};">✗</td><td style="color:{TOKENS['red']};">✗</td><td>✓</td><td style="color:{TOKENS['red']};">✗</td></tr>
+      <tr><td>ScaNN</td><td style="color:{TOKENS['red']};">✗</td><td style="color:{TOKENS['red']};">✗</td><td>✓</td><td style="color:{TOKENS['red']};">✗</td></tr>
+      <tr><td>Binary Quantization</td><td style="color:{TOKENS['red']};">✗</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr class="highlight"><td style="color:{TOKENS['red']};">TurboQuant</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    </table>
+    <div class="callout" style="margin-top:24px;">"First algorithm with all four properties simultaneously. Indexing: 3,957s → 0.002s."</div>
+    """
+    return base_html(body, ca)
+
+def slide_10():
+    """Act III — Agent Exploration"""
+    grid = generate_rule110_grid(rows=30, cols=60)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.10, x_offset=1100, y_offset=300)
+    body = f"""
+    <div class="section-label">Act III — The Navigator · New Research</div>
+    <h1 class="headline" style="font-size:52px;">When an Agent Reads Your Content,<br>It Doesn't Search. <span class="red">It Explores.</span></h1>
+    <div style="display:flex; gap:16px; margin-top:40px; align-items:center; font-size:22px; font-weight:700;">
+      <div style="background:{TOKENS['fg']}; color:white; padding:12px 20px;">Seed Entities</div>
+      <div style="font-size:28px;">→</div>
+      <div style="background:{TOKENS['fg']}; color:white; padding:12px 20px;">Expand</div>
+      <div style="font-size:28px;">→</div>
+      <div style="background:{TOKENS['red']}; color:white; padding:12px 20px;">Verify</div>
+      <div style="font-size:28px;">→</div>
+      <div style="background:{TOKENS['fg']}; color:white; padding:12px 20px;">Collect</div>
+      <div style="font-size:28px;">→</div>
+      <div style="background:{TOKENS['fg']}; color:white; padding:12px 20px;">Cite & Stop</div>
+    </div>
+    <div style="margin-top:36px; display:flex; gap:32px;">
+      <div style="flex:1; border-left:3px solid {TOKENS['red']}; padding-left:20px;">
+        <strong style="font-size:18px;">Seed Entities</strong>
+        <p style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:4px;">The agent starts from what it already knows, not from your URL. If your content isn't entity-linked, it may never be seeded.</p>
+      </div>
+      <div style="flex:1; border-left:3px solid {TOKENS['red']}; padding-left:20px;">
+        <strong style="font-size:18px;">Expand Neighborhoods</strong>
+        <p style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:4px;">The agent follows co-mention links. It finds your page through the entity graph, not keyword match.</p>
+      </div>
+      <div style="flex:1; border-left:3px solid {TOKENS['red']}; padding-left:20px;">
+        <strong style="font-size:18px;">Read & Verify</strong>
+        <p style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:4px;">Content with clear entity provenance gets collected. Poorly connected content is visited and discarded.</p>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_11():
+    """Act III — Conditional Advantage"""
+    grid = generate_rule110_grid(rows=25, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.08, x_offset=1200, y_offset=100)
+    body = f"""
+    <div class="section-label">Act III — The Navigator</div>
+    <h1 class="headline">The Conditional Advantage</h1>
+    <p class="subhead">When does an LLM controller outperform rule-based graph traversal?</p>
+    <p style="font-size:36px; font-weight:800; color:{TOKENS['red']}; margin-top:16px;">When the evidence is scattered.</p>
+    <table style="margin-top:32px;">
+      <tr><th>Evidence Distribution</th><th>LLM Win Rate</th><th>F1 Gain</th></tr>
+      <tr><td>Concentrated (1–5 chunks)</td><td>62%</td><td>+1.85pp</td></tr>
+      <tr><td>Scattered (6–10 chunks)</td><td>65%</td><td>+3.21pp</td></tr>
+      <tr><td>Highly scattered (11+ chunks)</td><td>62%</td><td>+2.42pp</td></tr>
+      <tr class="highlight"><td>High-scatter Complex Reasoning</td><td style="color:{TOKENS['red']}; font-size:26px;">71%</td><td style="color:{TOKENS['red']};">+4.55pp</td></tr>
+    </table>
+    <div class="callout" style="margin-top:24px;">"If the answer requires connecting facts across three sections, two product pages and a case study — that's where intelligent navigation delivers a different class of results."</div>
+    """
+    return base_html(body, ca)
+
+def slide_12():
+    """Act III — Discovery vs. Ranking"""
+    grid = generate_rule110_grid(rows=20, cols=40)
+    ca = ca_grid_to_svg(grid, cell_size=12, opacity=0.06, x_offset=800, y_offset=700)
+    body = f"""
+    <div class="section-label">Act III — The Navigator</div>
+    <h1 class="headline">Separation of Concerns</h1>
+    <p class="subhead">Discovery vs. Ranking</p>
+    <div class="two-col" style="margin-top:40px;">
+      <div>
+        <div class="col-label">What the LLM Does</div>
+        <div class="col-item active">Navigates the graph</div>
+        <div class="col-item active">Decides which entity paths to follow</div>
+        <div class="col-item active">Recognizes incomplete evidence</div>
+        <div class="col-item active">Backtracks and tries adjacent neighborhoods</div>
+        <div class="col-item active">Decides when to stop</div>
+      </div>
+      <div>
+        <div class="col-label">What the Vectors Do</div>
+        <div class="col-item">Rank the candidates the LLM discovered</div>
+        <div class="col-item">Pure cosine similarity against query embedding</div>
+        <div class="col-item">No LLM judgment in the final ranking step</div>
+      </div>
+    </div>
+    <div class="big-quote" style="margin-top:32px;">"<span class="red">Let the LLM explore.</span> Let the vectors decide."</div>
+    """
+    return base_html(body, ca)
+
+def slide_13():
+    """Act III — Model Capability Gap"""
+    grid = generate_rule110_grid(rows=20, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.06, x_offset=0, y_offset=800)
+    body = f"""
+    <div class="section-label">Act III — The Navigator</div>
+    <h1 class="headline">The Model Capability Gap</h1>
+    <p class="subhead">And why it matters for deployment</p>
+    <table style="margin-top:40px;">
+      <tr><th>Controller</th><th>vs. Heuristic</th><th>Behavior</th></tr>
+      <tr class="highlight"><td>Claude Haiku 4.5</td><td style="color:{TOKENS['red']};">+4.37pp ✓✓</td><td>Adaptive multi-hop navigation</td></tr>
+      <tr><td>Gemini 2.5 Flash Lite</td><td>+0.84pp (n.s.)</td><td>Moderate tool-calling</td></tr>
+      <tr><td>Gemma 4 27B (local)</td><td>−0.78pp</td><td>83% behavioral tie with heuristic</td></tr>
+    </table>
+    <div style="display:flex; gap:40px; margin-top:40px;">
+      <div style="flex:1;">
+        <div class="callout">"The gap is behavioral, not architectural. Same tools, same graph, same system prompt. Claude makes adaptive decisions. Gemma defaults to shallow patterns."</div>
+      </div>
+      <div style="flex:1;">
+        <div class="callout" style="border-left-color:{TOKENS['fg']};">"But Gemma's exploration traces are training data. Fine-tune a smaller model on strong controller trajectories, and the behavioral gap closes."</div>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_14():
+    """Act IV — On-Device Navigator"""
+    grid = generate_rule90_grid(rows=20, cols=40)
+    ca = ca_grid_to_svg(grid, cell_size=8, opacity=0.06, x_offset=1400, y_offset=200)
+    body = f"""
+    <div class="section-label">Act IV — The SLM Navigator</div>
+    <h1 class="headline">Your Next Agent Doesn't<br>Live in the Cloud</h1>
+    <div style="display:flex; gap:60px; margin-top:48px; flex:1; align-items:flex-start;">
+      <div style="flex:1; display:flex; flex-direction:column; gap:24px;">
+        <div style="background:{TOKENS['gray_light']}; padding:32px; border-left:5px solid {TOKENS['red']};">
+          <div style="font-size:22px; font-weight:800;">Secure.</div>
+          <p style="font-size:19px; color:{TOKENS['gray_dark']}; margin-top:8px;">Patient data, financial data, proprietary product data never leaves the device.</p>
+        </div>
+        <div style="background:{TOKENS['gray_light']}; padding:32px; border-left:5px solid {TOKENS['fg']};">
+          <div style="font-size:22px; font-weight:800;">Fast.</div>
+          <p style="font-size:19px; color:{TOKENS['gray_dark']}; margin-top:8px;">Sub-second navigation over a local graph index. No round-trip. No rate limit.</p>
+        </div>
+        <div style="background:{TOKENS['gray_light']}; padding:32px; border-left:5px solid {TOKENS['fg']};">
+          <div style="font-size:22px; font-weight:800;">Yours.</div>
+          <p style="font-size:19px; color:{TOKENS['gray_dark']}; margin-top:8px;">Trained on your connected data. It knows which entities matter in your domain.</p>
+        </div>
+      </div>
+      <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+        <div style="border:3px solid {TOKENS['fg']}; padding:20px 40px; font-size:22px; font-weight:700;">SLM (Gemma 4B / LiteRT)</div>
+        <div style="font-size:28px;">↕</div>
+        <div style="border:3px solid {TOKENS['red']}; padding:20px 40px; font-size:22px; font-weight:700;">GraphQL Interface</div>
+        <div style="font-size:28px;">↕</div>
+        <div style="border:3px solid {TOKENS['gray']}; padding:20px 40px; font-size:22px; font-weight:700;">Local Knowledge Graph</div>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_15():
+    """Act IV — Connected Data as Training Advantage"""
+    grid = generate_rule90_grid(rows=25, cols=60)
+    ca = ca_grid_to_svg(grid, cell_size=9, opacity=0.07, x_offset=100, y_offset=650)
+    body = f"""
+    <div class="section-label">Act IV — The SLM Navigator</div>
+    <h1 class="headline">Well-Connected Data Is<br>the Training Advantage</h1>
+    <div style="margin-top:40px; display:flex; flex-direction:column; gap:20px;">
+      <div class="step-box">
+        <div class="step-label">Step 1 — Connectivity Enables Distillation</div>
+        <p>Strong models navigate your connected graph and produce exploration traces. These traces are labeled training data for navigation policy distillation.</p>
+      </div>
+      <div class="step-box">
+        <div class="step-label">Step 2 — Cross-Property Multiplier</div>
+        <p>The graph isn't just your website. Product catalog, documentation, partner data, external KGs. More paths = more training signal.</p>
+      </div>
+      <div class="step-box" style="border-left-color:{TOKENS['fg']};">
+        <div class="step-label" style="color:{TOKENS['fg']};">Step 3 — The Dead End</div>
+        <p>Siloed content can't generate navigation trajectories. You can't distill a navigator from traversals that never happened.</p>
+      </div>
+    </div>
+    <div class="big-quote" style="margin-top:24px; font-size:28px;">"Data connectivity is not just a search SEO strategy. <span class="red">It's your AI training pipeline.</span>"</div>
+    """
+    return base_html(body, ca)
+
+def slide_16():
+    """Act IV — The Floor Is Set"""
+    grid = generate_rule90_grid(rows=20, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.05, x_offset=1200, y_offset=600)
+    body = f"""
+    <div class="section-label">Act IV — The SLM Navigator</div>
+    <h1 class="headline">The Floor Is Set</h1>
+    <p class="subhead">What's left to solve</p>
+    <div style="margin-top:48px; display:flex; gap:40px;">
+      <div style="flex:1;">
+        <div style="margin-bottom:32px;">
+          <div style="font-size:22px; font-weight:800;">Compression</div>
+          <div style="font-size:48px; font-weight:800; color:{TOKENS['red']}; margin-top:4px;">✓ Solved</div>
+          <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">Within ~2.7× of Shannon limit</div>
+        </div>
+        <div>
+          <div style="font-size:22px; font-weight:800;">Navigation</div>
+          <div style="font-size:48px; font-weight:800; color:{TOKENS['red']}; margin-top:4px;">✓ Conditional</div>
+          <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">Scattered evidence, capable models</div>
+        </div>
+      </div>
+      <div style="flex:1;">
+        <div style="margin-bottom:32px;">
+          <div style="font-size:22px; font-weight:800;">On-Device Deployment</div>
+          <div style="font-size:48px; font-weight:800; margin-top:4px;">→ 18 months</div>
+          <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">Distillation path is clear</div>
+        </div>
+        <div>
+          <div style="font-size:22px; font-weight:800;">Data Connectivity</div>
+          <div style="font-size:48px; font-weight:800; color:{TOKENS['red']}; margin-top:4px;">→ You</div>
+          <div style="font-size:18px; color:{TOKENS['gray_dark']}; margin-top:8px;">The variable you control today</div>
+        </div>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
+def slide_17():
+    """Act V — The Moat Is the Graph"""
+    grid = generate_rule110_grid(rows=35, cols=70)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.10, x_offset=900, y_offset=100)
+    # Add diagonal wedge for dramatic effect
+    ca += f'<polygon points="0,1080 1920,400 1920,1080" fill="{TOKENS["red"]}" opacity="0.06" />'
+    body = f"""
+    <div class="section-label">Act V — Structure Is the Moat</div>
+    <h1 class="headline" style="font-size:64px;">The Moat Is Not the Model.<br><span class="red">The Moat Is the Graph.</span></h1>
+    <div style="display:flex; gap:24px; margin-top:48px;">
+      <div style="flex:1; padding:28px; border-top:4px solid {TOKENS['fg']}; background:{TOKENS['gray_light']};">
+        <div style="font-size:18px; font-weight:700;">Limitless Context</div>
+        <div style="font-size:16px; color:{TOKENS['gray_dark']}; margin-top:8px;">TurboQuant compression</div>
+      </div>
+      <div style="flex:1; padding:28px; border-top:4px solid {TOKENS['fg']}; background:{TOKENS['gray_light']};">
+        <div style="font-size:18px; font-weight:700;">Billion-Scale Search</div>
+        <div style="font-size:16px; color:{TOKENS['gray_dark']}; margin-top:8px;">Zero-bias vector indexing</div>
+      </div>
+      <div style="flex:1; padding:28px; border-top:4px solid {TOKENS['fg']}; background:{TOKENS['gray_light']};">
+        <div style="font-size:18px; font-weight:700;">On-Device Intelligence</div>
+        <div style="font-size:16px; color:{TOKENS['gray_dark']}; margin-top:8px;">SLM navigator distillation</div>
+      </div>
+      <div style="flex:1; padding:28px; border-top:4px solid {TOKENS['red']}; background:#FFF5F5;">
+        <div style="font-size:18px; font-weight:700; color:{TOKENS['red']};">Navigable Knowledge Graph</div>
+        <div style="font-size:16px; color:{TOKENS['gray_dark']}; margin-top:8px;">The organizational layer</div>
+      </div>
+    </div>
+    <div class="big-quote" style="margin-top:40px; font-size:26px; max-width:1200px;">"The physical constraints are solved or being solved. What remains is the organizational constraint: most companies' data is not connected enough to be navigable."</div>
+    """
+    return base_html(body, ca)
+
+def slide_18():
+    """Act V — What Well-Connected Means"""
+    grid = generate_rule110_grid(rows=20, cols=50)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.05, x_offset=0, y_offset=800)
+    body = f"""
+    <div class="section-label">Act V — Structure Is the Moat</div>
+    <h1 class="headline" style="font-size:52px;">What 'Well-Connected' Actually<br>Means Across Environments</h1>
+    <div class="four-quad">
+      <div class="quad internal">
+        <h3>Products → Editorial</h3>
+        <p>Product entities mentioned in blog posts, docs and case studies with consistent identifiers</p>
+      </div>
+      <div class="quad external">
+        <h3>Your Entities in Wikidata / Schema.org</h3>
+        <p>Organization and key concepts referenced by external KBs that AI systems already know</p>
+      </div>
+      <div class="quad internal">
+        <h3>Docs → Support → Product</h3>
+        <p>Customer-facing content connected to internal knowledge with shared entity IDs</p>
+      </div>
+      <div class="quad external">
+        <h3>Partner & Ecosystem Data</h3>
+        <p>Product category entities connect to partner content, enabling cross-domain agent traversal</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:20px;">"Can an agent that starts from something adjacent to your business find its way to you by following entity links?"</div>
+    """
+    return base_html(body, ca)
+
+def slide_19():
+    """Act V — Closing Thesis"""
+    grid = generate_rule110_grid(rows=40, cols=80)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.12, x_offset=1000, y_offset=0)
+    body = f"""
+    <div style="display:flex; flex-direction:column; justify-content:center; height:100%;">
+      <div class="thesis-line">Context windows will keep growing.</div>
+      <div class="thesis-line">Models will keep getting cheaper.</div>
+      <div class="thesis-line">Compression is hitting the mathematical floor.</div>
+      <div class="thesis-line">Navigation intelligence is being distilled into devices you already own.</div>
+      <div class="thesis-bold"><span class="red">The variable that compounds is your data connectivity.</span></div>
+      <div class="thesis-action">Structure your knowledge now.</div>
+      <div class="thesis-action">Connect your entities across environments.</div>
+      <div class="thesis-action">Train your navigators on your graph.</div>
+      <div style="margin-top:40px; font-size:22px; color:{TOKENS['gray']};">
+        The research is live on arXiv today. The code is at github.com/wordlift/rlm-on-kg<br>
+        The graph is yours to build.
+      </div>
+      <div style="margin-top:auto; font-size:20px; color:{TOKENS['gray']};">Andrea Volpini · WordLift · SEO Week 2026</div>
+    </div>
+    """
+    return base_html(body, ca)
+
+
+# ═══════════════════════════════════════════════════
+# RENDER ENGINE
+# ═══════════════════════════════════════════════════
+
+SLIDE_GENERATORS = [
+    ("slide_01_title.png", slide_01),
+    ("slide_02_weight.png", slide_02),
+    ("slide_03_journey.png", slide_03),
+    ("slide_04_shifts.png", slide_04),
+    ("slide_05_paradox.png", slide_05),
+    ("slide_06_turboquant.png", slide_06),
+    ("slide_07_rankings.png", slide_07),
+    ("slide_08_realignment.png", slide_08),
+    ("slide_09_landscape.png", slide_09),
+    ("slide_10_explores.png", slide_10),
+    ("slide_11_advantage.png", slide_11),
+    ("slide_12_discovery.png", slide_12),
+    ("slide_13_gap.png", slide_13),
+    ("slide_14_ondevice.png", slide_14),
+    ("slide_15_training.png", slide_15),
+    ("slide_16_floor.png", slide_16),
+    ("slide_17_moat.png", slide_17),
+    ("slide_18_connected.png", slide_18),
+    ("slide_19_thesis.png", slide_19),
+]
+
+
+async def render_slides(only=None, preview=False):
+    """Render slides to PNG using Playwright."""
+    from playwright.async_api import async_playwright
+
+    SLIDES_DIR.mkdir(exist_ok=True)
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page(
+            viewport={"width": TOKENS["width"], "height": TOKENS["height"]},
+            device_scale_factor=1,
+        )
+
+        for i, (filename, generator) in enumerate(SLIDE_GENERATORS, 1):
+            if only and i != only:
+                continue
+
+            print(f"  [{i:02d}/19] Rendering {filename}...", end=" ", flush=True)
+            html = generator()
+            await page.set_content(html, wait_until="networkidle")
+            output_path = SLIDES_DIR / filename
+            await page.screenshot(path=str(output_path), type="png")
+            size_kb = output_path.stat().st_size // 1024
+            print(f"✓ ({size_kb} KB)")
+
+        await browser.close()
+
+    print(f"\n✓ All slides saved to {SLIDES_DIR}/")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Generate V5 'Structure Is the Moat' presentation slides"
+    )
+    parser.add_argument("--only", type=int, default=0, help="Generate only slide N")
+    parser.add_argument("--preview", action="store_true", help="Open preview in browser")
+    args = parser.parse_args()
+
+    asyncio.run(render_slides(only=args.only or None, preview=args.preview))
+
+
+if __name__ == "__main__":
+    main()

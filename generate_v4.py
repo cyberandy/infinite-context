@@ -15,9 +15,13 @@ import os
 import sys
 import time
 from pathlib import Path
+from dotenv import load_dotenv
 
 from google import genai
 from google.genai import types
+
+# Load environment variables
+load_dotenv()
 
 
 # ── Swiss Style preamble (prepended to every animation prompt) ──
@@ -36,129 +40,109 @@ SWISS_PREAMBLE = (
 SLIDES = [
     # ── Ch 1: Infinite Context ──
     ("01_ch1_title.png",
-     "Gentle slow zoom into the slide from slightly wider framing. "
-     "The large title text remains sharp and static. "
-     "A thin red horizontal line draws in from the left edge. "
+     "The large red wedge draws in smoothly from the bottom right, anchoring the composition. "
+     "The title text '01 INFINITE CONTEXT' remains sharp and static on the black background. "
      "Subtle parallax between the large number and the title. "
-     "Elegant, minimal reveal."),
+     "Elegant, minimal, Swiss-style reveal."),
 
     ("02_context.png",
-     "The slide content fades in gently from transparent to fully visible. "
-     "The horizontal bar diagram fills in with a smooth left-to-right "
-     "animation, the highlighted section appearing first. "
-     "Very subtle micro-parallax. Clean, restrained."),
+     "The slide content fades in gently. The 'visible' blue section in the context window "
+     "bar pulses with a steady, clinical rhythm. The line between the brain icon and "
+     "the bar draws in precisely. Clean, restrained, scientific feel."),
 
     ("03_quadratic.png",
-     "The bar chart elements animate: bars grow upward smoothly from "
-     "the baseline. The short bar appears first, then the tall bar grows "
-     "dramatically taller. Network diagram nodes gently pulse once. "
-     "Minimal, analytical, data-visualization feel."),
+     "The bar chart grows smoothly from the bottom: the short blue bar settles first, "
+     "followed by the dramatic growth of the red bar. Network diagram nodes "
+     "on the right pulse with subtle activity. Restrained data visualization."),
 
     ("04_race.png",
-     "The staircase chart draws in step by step from left to right, "
-     "each step appearing in sequence. The final tallest step gains "
-     "a subtle glow or highlight. Smooth, clean timing. "
-     "Restrained, editorial chart animation."),
+     "The blue staircase chart animates step by step, reflecting the growth of "
+     "context windows from 2K to 10M+. Each step appears with a precise, "
+     "modular slide-in. Clean, editorial layout with active whitespace."),
 
     # ── Ch 2: Architecture ──
     ("05_ch2_title.png",
-     "Gentle slow zoom into the slide. "
-     "A thin red horizontal line draws in from the left edge. "
-     "Subtle parallax between the large number and the title below it. "
-     "Minimal, elegant chapter reveal. Same feel as opening slide."),
+     "The wide red wedge slides across the center horizontally, dividing the "
+     "large '02' from the 'ARCHITECTURE' title. The blue triangle in the bottom "
+     "right glows subtly. Minimal, elegant chapter reveal with Swiss grid discipline."),
 
     ("06_stretching.png",
-     "Three rows of content appear one by one with subtle slide-in "
-     "from the left, staggered timing. Each row settles precisely "
-     "on the grid. Thin hairline separators draw in. "
-     "Clean sequential reveal, no bounce."),
+     "Three rows of architectural techniques reveal sequentially from top to bottom. "
+     "Text appears with a crisp, no-bounce fade and slide-in. "
+     "Thin horizontal hairline dividers draw across the grid. Precise and functional."),
 
     ("07_ceiling.png",
-     "The line chart curve draws smoothly from left to right. "
-     "The curve plateaus, then bends downward. "
-     "A red indicator point appears at the inflection. "
-     "Minimal, analytical data animation. Locked-off camera."),
+     "The performance curve draws smoothly from left to right. It plateaus accurately "
+     "before dropping at the 'Context Rot' mark. The red indicator wedge pulses "
+     "once to highlight the drop. Analytical and deliberate."),
 
     ("08_tworoutes.png",
-     "Two-column layout reveals sequentially: left column content "
-     "fades in first, then the vertical dividing line draws downward, "
-     "then right column fades in. Balanced, deliberate timing. "
-     "Clean separation, Swiss grid discipline."),
+     "The vertical dividing line draws down the center. The left column (bigger brain) "
+     "and right column (smarter memory) fade in with balanced symmetry. "
+     "Clean, asymmetric Swiss composition remains perfectly steady."),
 
     # ── Ch 3: Memory ──
     ("09_ch3_title.png",
-     "Gentle slow zoom into the slide. "
-     "A thin red horizontal line draws in from the left edge. "
-     "Subtle parallax between the large number and the title. "
-     "Minimal, elegant chapter reveal."),
+     "The red wedge pulses with a steady, clinical light. The large '03' and "
+     "'MEMORY' title remain static. Subtle parallax adds depth without breaking "
+     "the grid. Minimalist and cinematic chapter intro."),
 
     ("10_virtual.png",
-     "Three horizontal bars slide in from the left with staggered "
-     "timing, each one slightly longer than the previous. "
-     "They lock precisely onto the grid. "
-     "Clean, modular, systematic animation."),
+     "The memory hierarchy bars fill in with staggered timing: Main Context, "
+     "then Recall Storage, then Archival Vector DB. Labels appear precisely "
+     "above each bar. Systematic, modular animation style."),
 
     ("11_rag.png",
-     "Flow diagram arrows draw in from left to right in sequence. "
-     "Each element in the chain appears after the arrow reaches it. "
-     "Smooth, logical left-to-right reveal. "
-     "Clean, minimal, analytical."),
+     "Flow diagram arrows draw in sequence from the question mark to the database "
+     "and finally to the LLM brain. Each icon settles with a subtle, sharp "
+     "reveal. Clean, technical schematic animation."),
 
     ("12_rlm.png",
-     "Two-column comparison reveals: left side slides in from left, "
-     "pause, then right side slides in from right. "
-     "Arrow between them draws last. "
-     "Clean Swiss grid structure, deliberate pacing."),
+     "Two-column juxtaposition: the left 'speed reader' side fades in muted, "
+     "the right 'librarian' side enters with a sharp, vivid reveal. "
+     "The blue arrow between them draws last. Confident, editorial pacing."),
 
     # ── Ch 4: Recursion ──
     ("13_ch4_title.png",
-     "Gentle slow zoom into the slide. "
-     "A thin red horizontal line draws in from the left edge. "
-     "Subtle parallax between the large number and the title. "
-     "Minimal, elegant chapter reveal."),
+     "The red lightning-wedge accent pulses with energy. The large '04' and "
+     "'RECURSION' title are locked and sharp. Elegant slow zoom into the "
+     "entire modular composition. Dramatic yet restrained."),
 
     ("14_howrlm.png",
-     "Flow diagram animates: left box appears first, then an arrow "
-     "draws rightward to the second box. A return arrow draws below "
-     "going leftward. Smooth sequential reveal of the flow. "
-     "Clean, technical, restrained."),
+     "The recursive loop animates: the arrow from 'writes code' to 'External REPL' "
+     "draws first, followed by the return arrow 'results return' below it. "
+     "Arrows move with precise, non-curved motion. Clean technical flow."),
 
     ("15_paper.png",
-     "The circular flow diagram draws clockwise, each step appearing "
-     "in sequence around the circle. The center label fades in last. "
-     "Smooth, continuous rotational drawing motion. "
-     "Analytical, clean."),
+     "The circular 'RLM-on-KG' diagram draws clockwise with a steady pen-stroke "
+     "motion, revealing Seed, Expand, Verify, Collect, and Re-rank. "
+     "The '9 tools' center label fades in last. Balanced and clear."),
 
     ("16_results.png",
-     "Large data numbers fade in with subtle scale-up animation. "
-     "Then a bordered box draws its outline around the key statistic. "
-     "Clean reveal hierarchy: headline, data, then callout box. "
-     "Minimal, confident, editorial."),
+     "The F1 scores reveal with a sharp fade-in. A thin blue box draws around "
+     "the '56% win rate' statistic to highlight the key result. "
+     "Minimum decoration, maximum data clarity. Confident reveal."),
 
     # ── Ch 5: The SEO Playbook ──
     ("17_ch5_title.png",
-     "Gentle slow zoom into the slide. "
-     "A thin red horizontal line draws in from the left edge. "
-     "Subtle parallax between the large number and the title. "
-     "Minimal, elegant chapter reveal."),
+     "The red wedge and blue star accent pulse together in a slow, synchronized "
+     "rhythm. The '05' and 'THE SEO PLAYBOOK' title remain sharp. "
+     "Swiss International Style at its most cinematic."),
 
     ("18_oldnew.png",
-     "Top section fades in first, appearing muted and desaturated. "
-     "A strikethrough line draws across it. Then the bottom section "
-     "slides in from left, appearing bold and vivid. "
-     "Clean before-and-after juxtaposition."),
+     "The top 'crawling' section fades into a desaturated gray, then a striking "
+     "red line draws through it. The bottom 'Exploring' section slides in "
+     "from the left with bold, vivid blue accents. Decisive transformation."),
 
     ("19_optimize.png",
-     "Five list items appear one by one from top to bottom, each "
-     "sliding in from the left with clean stagger. Small red squares "
-     "appear as bullet markers just before each line settles. "
-     "Systematic, precise, grid-aligned."),
+     "The five priorities reveal one by one from top to bottom. Blue checkboxes "
+     "appear as bullet markers with a sharp, clinical flash. "
+     "Text is perfectly aligned to the modular grid. Systematic and clear."),
 
     ("20_cta.png",
-     "The large headline fades in with a subtle float-up. "
-     "Body text fades in softer after a brief pause. "
-     "A thin red horizontal rule draws from left to right at the bottom. "
-     "Confident, final, decisive closing slide."),
+     "The final headline fades in with a confident, centered presence. "
+     "Subtle parallax makes the core message feel alive. "
+     "A thin red rule draws across the bottom as a final period. Decisive closing."),
 ]
 
 SLIDES_DIR = Path("slides_v3_16x9")
@@ -178,8 +162,15 @@ def check_setup() -> bool:
             ok = False
 
     try:
-        genai.Client(vertexai=True, project="videogeneration-484813", location="us-central1")
-        print("  ✓ Vertex AI client OK")
+        api_key = os.getenv("GEMINI_KEY")
+        if api_key:
+            genai.Client(api_key=api_key)
+            print("  ✓ Google AI Studio client OK (using GEMINI_KEY)")
+        else:
+            project_id = os.getenv("PROJECT_NUMBER") or os.getenv("PROJECT_NAME", "videogeneration-484813").split('/')[-1]
+            location = os.getenv("GCP_LOCATION", "us-central1")
+            genai.Client(vertexai=True, project=project_id, location=location)
+            print(f"  ✓ Vertex AI client OK (Project: {project_id})")
     except Exception as e:
         print(f"  ✗ Client error: {e}")
         ok = False
@@ -309,11 +300,17 @@ def main():
 
     VIDEOS_DIR.mkdir(exist_ok=True)
 
-    client = genai.Client(
-        vertexai=True,
-        project="videogeneration-484813",
-        location="us-central1",
-    )
+    api_key = os.getenv("GEMINI_KEY")
+    if api_key:
+        client = genai.Client(api_key=api_key)
+    else:
+        project_id = os.getenv("PROJECT_NUMBER") or os.getenv("PROJECT_NAME", "videogeneration-484813").split('/')[-1]
+        location = os.getenv("GCP_LOCATION", "us-central1")
+        client = genai.Client(
+            vertexai=True,
+            project=project_id,
+            location=location,
+        )
 
     total = len(SLIDES)
     success = 0

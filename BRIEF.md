@@ -1,85 +1,104 @@
-# Infinite Context — Presentation Brief
+# Structure Is the Moat — Presentation Brief
 
 ## Overview
 
-**Title**: Infinite Context: From Context Windows to Autonomous Retrieval  
+**Title**: Structure Is the Moat: How the Context Explosion Rewrites the Rules of Search  
 **Author**: Andrea Volpini · WordLift  
-**Format**: 20 animated slides (16:9, 8 seconds each)  
-**Source**: Based on the research paper *RLM-on-KG: Autonomous Retrieval over RDF Knowledge Graphs*
+**Event**: SEO Week 2026  
+**Format**: 19 slides, 35–40 minutes  
+**Sources**: TurboQuant, RLM-on-KG (arXiv), wordlift-graphql, Google AI Edge
 
 ---
 
-## Narrative Arc (5 Chapters, 20 Slides)
+## Narrative Spine
 
-### Chapter 1 — Infinite Context (Slides 1–4)
+> As context windows expand toward infinity, the question stops being "how much can I retrieve?" and becomes "how well is my data connected?" The organizations that understand this now will own the next cycle of AI-powered search. The ones that don't will be paying for compute forever and getting generic answers.
 
-The presentation opens with the fundamental question: *What is a context window?* It's the working memory of a language model — the text the model can "see" at once.
+---
 
-| Slide | Title | Key Message |
-|-------|-------|-------------|
-| 01 | **Infinite Context** | Chapter title card |
-| 02 | **What Is Context?** | The context window is the LLM's working memory — a fixed buffer of visible tokens |
-| 03 | **The Quadratic Wall** | Doubling context quadruples the cost (quadratic attention scaling) |
-| 04 | **The Context Race** | Context windows grew from 2K (2020) → 32K → 128K → 2M → 10M+ (2026). But is more enough? |
-
-### Chapter 2 — Architecture (Slides 5–8)
-
-Engineering approaches to stretching the window — and why they hit a ceiling.
+## Act I — The Context Explosion (Slides 1–4)
+*What just changed, and why the audience should care personally.*
 
 | Slide | Title | Key Message |
 |-------|-------|-------------|
-| 05 | **Architecture** | Chapter title card |
-| 06 | **Stretching the Window** | Three techniques: Compressive Memory (Infini-attention), State Space Models (Mamba/SAMBA), RoPE Scaling (LongRoPE2) |
-| 07 | **The Ceiling** | More input ≠ better understanding. Accuracy plateaus then drops — "Context Rot" |
-| 08 | **Two Routes** | Architectural (bigger brain) vs. Philosophical (smarter memory). Neither solved it alone |
+| 01 | **Structure Is the Moat** | Title card. Subhead: "What the context explosion means for how AI finds, navigates and ranks your content" |
+| 02 | **Why Context Has a Weight Problem** | KV Cache, Vector DBs, On-Device + NEW fourth panel: AI Search Agents. "When an AI agent loses context halfway through reasoning about your content, it doesn't tell you. It just gives a worse answer." |
+| 03 | **Search Used to Be a Query. Now It's a Journey.** | Two-column: Old model (stateless, symmetric, keyword relevance) vs. Agent model (stateful, asymmetric, reachability). Pivot: content competes on *reachability*, not relevance |
+| 04 | **Three Shifts That Changed What 'Findable' Means** | 1. Retrieval → Navigation. 2. Documents → Entities. 3. One model → A system. Seeds the three pillars: compression, navigation, structure |
 
-### Chapter 3 — Memory (Slides 9–12)
+---
 
-The philosophical shift: instead of cramming more into the window, give the model external memory systems.
-
-| Slide | Title | Key Message |
-|-------|-------|-------------|
-| 09 | **Memory** | Chapter title card |
-| 10 | **Virtual Memory for LLMs** | Letta/MemGPT: small fast window + recall cache + archival vector DB. Unbounded system memory |
-| 11 | **Give It a Search Bar** | RAG: Query → Database → LLM. Fetch only what's relevant |
-| 12 | **Enter Recursive Language Models** | Standard LLM = "speed reader" vs. RLM = "librarian." Context as environment to explore, not buffer to fill |
-
-### Chapter 4 — Recursion (Slides 13–16)
-
-The paper's core contribution: how RLMs work, and the RLM-on-KG system.
+## Act II — The Compression Solution (Slides 5–9)
+*TurboQuant as the mathematical answer to the memory wall — and what "unbiased inner product" means for search relevance.*
 
 | Slide | Title | Key Message |
 |-------|-------|-------------|
-| 13 | **Recursion** | Chapter title card |
-| 14 | **How RLMs Work** | LLM writes code → External REPL executes (search, partition, peek) → results return. Programmatic exploration, not memorization |
-| 15 | **RLM-on-KG** | Autonomous navigator over RDF knowledge graphs. Circular pipeline: Seed → Expand → Verify → Collect → Re-rank (9 tools) |
-| 16 | **Results** | F1: 45.8 (RLM-on-KG) vs. 45.6 (GraphRAG). 56% win rate when evidence scattered across 11+ chunks. RLMs win when structure matters most |
+| 05 | **The Compression Paradox** | Three-circle tension (High Compression / Zero Overhead / Geometric Accuracy). "Get it wrong and your similarity scores are silently biased." |
+| 06 | **TurboQuant: Geometric Compression Without Information Loss** | Two-stage pipeline (PolarQuant → QJL). Data-oblivious: works on any corpus without re-training. 4.5× smaller KV cache, 8× faster attention, zero recall degradation |
+| 07 | **Why 'Compressing Your Embeddings' Can Silently Destroy Your Rankings** | Angle-shift diagram. Three-level translation: the math (2/π bias at 1-bit), the system (broken compass), the consequence (invisible ranking degradation) |
+| 08 | **The 1-Bit Zero-Bias Realignment** | QJL correction. "Inner product estimates are now provably unbiased. Your compressed vector index scores similarity with mathematical correctness." |
+| 09 | **The Quantization Landscape** | Comparison table with search-translation row. TurboQuant = first algorithm with all four properties. Fold in key numbers: 3,957s→0.002s indexing |
 
-### Chapter 5 — The SEO Playbook (Slides 17–20)
+---
 
-Implications for SEO and content strategy in the age of AI agents.
+## Act III — The Navigator (Slides 10–13)
+*RLM-on-KG: when agents navigate graphs, LLM control beats heuristics — but only when evidence is scattered. Paper announcement.*
 
 | Slide | Title | Key Message |
 |-------|-------|-------------|
-| 17 | **The SEO Playbook** | Chapter title card |
-| 18 | **From Crawl-Index-Rank to Explore-Verify-Cite** | Old pipeline (crossed out) → new paradigm. AI agents don't rank pages — they navigate structured data |
-| 19 | **What to Optimize** | Five priorities: Stable URIs, Mention Links, Provenance Anchors, Entity Pages, Crawlable Endpoints. Make content navigable, not just embeddable |
-| 20 | **Structure Is the New Moat** | Connected data compounds in value. Schema.org, Knowledge Graphs, entity markup — these are the surfaces agents explore |
+| 10 | **When an Agent Reads Your Content, It Doesn't Search. It Explores.** | Full-width retrieval loop: Seed → Expand → Verify → Collect → Cite. Three plain-language translations of each step. arXiv announcement badge |
+| 11 | **The Conditional Advantage: When Intelligence Beats Rules** | Scatter evidence table. 71% win rate on high-scatter complex reasoning. "If the answer requires connecting facts across three sections — that's where intelligent navigation delivers." |
+| 12 | **Separation of Concerns: Discovery vs. Ranking** | Two-column: LLM explores (navigation breadth) / Vectors rank (cosine similarity). "Let the LLM explore. Let the vectors decide." Content must be *structurally reachable* |
+| 13 | **The Model Capability Gap** | Three-model comparison (Claude Haiku +4.37pp / Gemini Flash Lite +0.84pp / Gemma 4 −0.78pp). Gap is behavioral, not architectural. Distillation implication bridges to Act IV |
+
+---
+
+## Act IV — The SLM Navigator (Slides 14–16)
+*Your next agent runs on your phone, trained on your connected data, with no API call required.*
+
+| Slide | Title | Key Message |
+|-------|-------|-------------|
+| 14 | **Your Next Agent Doesn't Live in the Cloud** | Architecture: Phone/Edge + SLM + GraphQL → local KG. Three properties: Secure (data never leaves device), Fast (sub-second, no round-trip), Yours (trained on your graph) |
+| 15 | **Well-Connected Data Is the Training Advantage** | Three steps: Connectivity enables distillation → Connected data across properties multiplies advantage → Disconnected data = training dead end. "Data connectivity is your AI training pipeline." |
+| 16 | **The Floor Is Set — What's Left to Solve** | Shannon limit curve vs. TurboQuant. Progress report: Compression ✓ / Navigation ✓ (conditional) / On-device → 18 months / Data connectivity → "the variable you control today" |
+
+---
+
+## Act V — Structure Is the Moat (Slides 17–19)
+*Closing argument: the organizations that win the next cycle are building their data graph now.*
+
+| Slide | Title | Key Message |
+|-------|-------|-------------|
+| 17 | **The Moat Is Not the Model. The Moat Is the Graph.** | Four pillars: Limitless Context, Billion-Scale Search, On-Device Intelligence, Navigable Knowledge Graph. "The physical constraints are solved. What remains is the organizational constraint." |
+| 18 | **What 'Well-Connected' Actually Means** | Four quadrants: Internal (Products→Editorial, Docs→Support→Product) / External (Wikidata/Schema.org, Partner ecosystems). "Can an agent that starts from something adjacent find its way to you?" |
+| 19 | **Closing Thesis** | "Context windows will keep growing. Models will keep getting cheaper. The variable that compounds is your data connectivity. Structure your knowledge now." GitHub + arXiv references |
 
 ---
 
 ## Design System
 
-### Visual Style: Swiss International Typographic Style
+### Visual Style: Swiss International Typographic Style (Müller-Brockmann)
 
-The entire deck follows a strict Müller-Brockmann-inspired design system:
+The entire deck follows a strict Müller-Brockmann-inspired design system with **implicit Cellular Automata influence** governing the generative visual logic:
 
 - **Layout**: Modular grid, asymmetric flush-left composition, active whitespace
-- **Typography**: Neo-grotesk sans-serif (Helvetica-like), hierarchy through scale not decoration
+- **Typography**: Neo-grotesk sans-serif (Helvetica/Akzidenz-Grotesk), hierarchy through scale not decoration
 - **Color**: White background, black text, cool gray secondary, vivid Swiss red accent (functional only)
 - **Constraints**: No centered text, no decorative icons, no gradients, no shadows, no illustrations
 
-### Animation Style (Veo 3.1)
+### Implicit CA Rule Mapping (Visual Substrate)
+
+The Cellular Automata rules govern the proportional logic and visual rhythm of each act — never labeled, never decorative, always structural:
+
+| Act | CA Rule | Visual Expression |
+|-----|---------|-------------------|
+| I — Context Explosion | **Rule 30** (Chaos from simplicity) | Irregular, asymmetric grid disruptions. Wedge forms that break predictable patterns. Visual tension representing the unpredictable cost scaling of naive context growth |
+| II — Compression | **Rule 90** (Sierpinski / fractal symmetry) | Self-similar, nested grid structures. Triangular proportional logic in diagram layouts. The mathematical elegance of TurboQuant reflected in fractal regularity |
+| III — Navigator | **Rule 110** (Turing completeness) | Dense, generative grid fields (red/gray state cells). The grid "computes" — cells light up as the retrieval loop progresses. Emergent patterns from local rules |
+| IV — SLM Navigator | **Rule 90** (Symmetry, distillation) | Reduced-scale echo of Act II grids. Smaller, more ordered. The visual "compression" of the full navigator into a portable form |
+| V — Structure Is the Moat | **Rule 110** (Universal computation) | The grid resolves into a clear, connected structure. Order emerging from the generative patterns of earlier acts. Visual resolution |
+
+### Animation Style (Veo 3.1 — Future Phase)
 
 Motion-only prompts — Veo animates the existing slide image, never renders new text:
 
@@ -92,11 +111,23 @@ Motion-only prompts — Veo animates the existing slide image, never renders new
 
 ## Technical Pipeline
 
-1. **Slide images** → 20 PNG files at 16:9 in `slides_v3_16x9/`
-2. **Video generation** → Veo 3.1 on Vertex AI via `generate_v4.py` → `videos_v4/`
-3. **Concatenation** → ffmpeg → `presentation_v4.mp4`
-4. **GIF conversion** → 720p (`gifs_v4/`) and 480p (`gifs_v4_480p/`)
-5. **PPTX** → `create_slides.py` → `infinite_context_v4.pptx` (480p GIFs, <100 MB)
+1. **Slide images** → 19 PNG files at 16:9 in `slides_v5/`
+2. **Video generation** (future) → Veo 3.1 via `generate_v5.py` → `videos_v5/`
+3. **Concatenation** → ffmpeg → `presentation_v5.mp4`
+4. **PPTX** → `create_slides.py` → `structure_is_the_moat.pptx`
+
+---
+
+## Key Content Sources (Speaker Notes)
+
+| Source | Used In |
+|--------|---------|
+| embeddings-search-visibility post | Slide 3 — empirical observation that agents arrive at content through entity traversal |
+| Volpini LinkedIn (GPT-5 navigation) | Slides 3, 18 — retrieval is now navigation |
+| RLM-on-KG §5.5–5.6 (scatter tables) | Slides 11–12 — win rate heatmap, core evidence |
+| RLM-on-KG §5.8 (cross-model) | Slides 13–15 — behavioral gap, distillation target |
+| wordlift-graphql / Google AI Edge | Slide 14 — code reference for SLM navigator |
+| TurboQuant slide 13 (Shannon floor) | Slide 16 — keep chart, reframe commentary |
 
 ---
 
@@ -104,3 +135,5 @@ Motion-only prompts — Veo animates the existing slide image, never renders new
 
 - **Paper**: [RLM-on-KG](https://github.com/wordlift/rlm-on-kg) — Autonomous retrieval over RDF knowledge graphs
 - **Repository**: [cyberandy/infinite-context](https://github.com/cyberandy/infinite-context)
+- **TurboQuant**: Geometric compression for vector search
+- **wordlift-graphql**: GraphQL interface for connected knowledge graphs
