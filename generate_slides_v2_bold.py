@@ -64,7 +64,7 @@ font-family:{T['font']};overflow:hidden;position:relative;color:{fg};}}
 display:flex;flex-direction:column;justify-content:center;}}
 .section{{font-size:16px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
 color:{T['sky']};margin-bottom:24px;}}
-.h{{font-weight:900;line-height:0.92;letter-spacing:-5px;}}
+.h{{font-weight:900;line-height:1.08;letter-spacing:-3px;}}
 .bar{{height:5px;margin-top:32px;}}
 </style></head><body>
 <div class="ca"><svg width="{T['W']}" height="{T['H']}" xmlns="http://www.w3.org/2000/svg">{ca_svg}</svg></div>
