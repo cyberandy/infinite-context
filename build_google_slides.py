@@ -72,7 +72,13 @@ def main():
     # 1. Create presentation
     print("Creating presentation...")
     pres = service.presentations().create(
-        body={"title": "Structure Is the Moat — SEO Week 2026"}
+        body={
+            "title": "Structure Is the Moat — SEO Week 2026",
+            "pageSize": {
+                "width": {"magnitude": SLIDE_W, "unit": "EMU"},
+                "height": {"magnitude": SLIDE_H, "unit": "EMU"},
+            },
+        }
     ).execute()
     pres_id = pres["presentationId"]
     print(f"  ✓ Created: https://docs.google.com/presentation/d/{pres_id}")
