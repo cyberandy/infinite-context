@@ -243,11 +243,11 @@ ANIMATIONS = [
     ("11_pipeline_steps", "dark", """
     <style>
     @keyframes stepIn{from{opacity:0.15;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
-    .step{padding:16px 32px;font-size:18px;font-weight:700;border:2px solid rgba(255,255,255,0.25);
+    .step{padding:14px 22px;font-size:16px;font-weight:700;border:2px solid rgba(255,255,255,0.25);
           opacity:0.15;animation:stepIn 0.4s ease-out forwards;font-family:%(font)s;color:white;}
-    .arrow{color:%(gray)s;font-size:24px;opacity:0.15;animation:stepIn 0.3s ease-out forwards;}
+    .arrow{color:%(gray)s;font-size:22px;opacity:0.15;animation:stepIn 0.3s ease-out forwards;}
     </style>
-    <div style="display:flex;align-items:center;gap:12px;padding:40px;">
+    <div style="display:flex;align-items:center;gap:10px;padding:30px;">
       <div class="step" style="animation-delay:0s;">Seed</div>
       <div class="arrow" style="animation-delay:0.3s;">→</div>
       <div class="step" style="animation-delay:0.5s;">Expand</div>
@@ -487,7 +487,7 @@ ANIMATIONS = [
     color:%(berry)s;animation:count7 1.5s steps(5) forwards;}
     </style>
     <div style="padding:40px;font-family:%(font)s;">
-      <div><span class="num"></span><span style="font-size:160px;font-weight:900;color:%(berry)s;">%%</span></div>
+      <div><span class="num"></span><span style="font-size:160px;font-weight:900;color:%(berry)s;">%</span></div>
       <div style="font-size:28px;font-weight:700;color:%(dark)s;margin-top:12px;">Ghost Citations</div>
     </div>"""),
 
