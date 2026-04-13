@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Content animations for the full 29-slide v2 deck.
-Generates transparent-background-ready GIF overlays for Google Slides.
+Full animation set — one GIF per slide (29 total).
+Transparent-ready overlays for Google Slides assembly.
 """
 
 import asyncio
@@ -18,10 +18,34 @@ T = {
 
 
 ANIMATIONS = [
-    # Act I
+
+    # ── 01 TITLE ───────────────────────────────────────
+    ("01_title_reveal", "dark", """
+    <style>
+    @keyframes titleUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes barGrow{from{width:0}to{width:80px}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    </style>
+    <div style="padding:80px 100px;font-family:%(font)s;color:white;display:flex;flex-direction:column;height:100%%;">
+      <div style="margin-top:auto;margin-bottom:auto;">
+        <div style="font-size:14px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
+             color:%(sky)s;animation:fadeIn 0.6s ease-out forwards;opacity:0;">SEO Week 2026</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;margin-top:20px;
+             animation:titleUp 0.8s ease-out 0.3s forwards;opacity:0;transform:translateY(40px);">Structure</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;
+             animation:titleUp 0.8s ease-out 0.5s forwards;opacity:0;transform:translateY(40px);">Is the</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;
+             animation:titleUp 0.8s ease-out 0.7s forwards;opacity:0;transform:translateY(40px);">Moat</div>
+        <div style="height:4px;background:%(sky)s;margin-top:36px;animation:barGrow 0.6s ease-out 1.2s forwards;width:0;"></div>
+        <div style="font-size:20px;color:%(gray)s;margin-top:24px;animation:fadeIn 0.8s ease-out 1.5s forwards;opacity:0;">
+          What the context explosion means for how AI finds, navigates and ranks your content</div>
+      </div>
+    </div>"""),
+
+    # ── 02 WEIGHT PROBLEM ──────────────────────────────
     ("02_context_bars", "dark", """
     <style>
-    @keyframes g{from{width:0%}to{width:100%}}
+    @keyframes g{from{width:0}to{width:100%%}}
     .bar{height:36px;border-radius:3px;animation:g 2s ease-out forwards;margin-bottom:16px;}
     .label{font-size:16px;font-weight:700;margin-bottom:6px;}
     </style>
@@ -36,7 +60,72 @@ ANIMATIONS = [
       <div class="bar" style="background:%(berry)s;animation-delay:0.9s;max-width:85%%;"></div>
     </div>"""),
 
-    # Act II
+    # ── 03 QUERY → JOURNEY ─────────────────────────────
+    ("03_two_columns", "dark", """
+    <style>
+    @keyframes slideL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideR{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    </style>
+    <div style="display:flex;gap:40px;padding:40px;font-family:%(font)s;color:white;height:100%%;">
+      <div style="flex:1;padding:28px;border-top:4px solid %(gray)s;
+           animation:slideL 0.7s ease-out 0.3s forwards;opacity:0;">
+        <div style="font-size:13px;font-weight:700;color:%(gray)s;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">The Old Model</div>
+        <div style="font-size:17px;color:%(gray)s;line-height:2;">Stateless · Symmetric · One-shot</div>
+        <div style="font-size:20px;font-weight:700;margin-top:16px;animation:fadeIn 0.5s ease-out 1.2s forwards;opacity:0;">The document was the unit</div>
+      </div>
+      <div style="flex:1;padding:28px;border-top:4px solid %(sky)s;
+           animation:slideR 0.7s ease-out 0.6s forwards;opacity:0;">
+        <div style="font-size:13px;font-weight:700;color:%(sky)s;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">The Agent Model</div>
+        <div style="font-size:17px;color:%(gray)s;line-height:2;">Stateful · Asymmetric · Multi-hop</div>
+        <div style="font-size:20px;font-weight:700;margin-top:16px;animation:fadeIn 0.5s ease-out 1.5s forwards;opacity:0;">The entity is the unit</div>
+      </div>
+    </div>"""),
+
+    # ── 04 THREE SHIFTS ────────────────────────────────
+    ("04_three_shifts", "dark", """
+    <style>
+    @keyframes itemIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+    <div style="padding:40px;font-family:%(font)s;color:white;">
+      <div style="display:flex;gap:24px;margin-bottom:36px;align-items:flex-start;
+           animation:itemIn 0.6s ease-out 0.2s forwards;opacity:0;transform:translateY(20px);">
+        <div style="font-size:48px;font-weight:900;color:%(sky)s;line-height:1;min-width:70px;">01</div>
+        <div><div style="font-size:24px;font-weight:900;">Retrieval → Navigation</div>
+          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">Content competes on reachability</div></div></div>
+      <div style="display:flex;gap:24px;margin-bottom:36px;align-items:flex-start;
+           animation:itemIn 0.6s ease-out 0.7s forwards;opacity:0;transform:translateY(20px);">
+        <div style="font-size:48px;font-weight:900;color:%(sky)s;line-height:1;min-width:70px;">02</div>
+        <div><div style="font-size:24px;font-weight:900;">Documents → Entities</div>
+          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">The unit of search is now an entity</div></div></div>
+      <div style="display:flex;gap:24px;align-items:flex-start;
+           animation:itemIn 0.6s ease-out 1.2s forwards;opacity:0;transform:translateY(20px);">
+        <div style="font-size:48px;font-weight:900;color:%(sky)s;line-height:1;min-width:70px;">03</div>
+        <div><div style="font-size:24px;font-weight:900;">One Model → A System</div>
+          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">Compression · Navigation · Structure</div></div></div>
+    </div>"""),
+
+    # ── 05 COMPRESSION PARADOX (chapter) ───────────────
+    ("05_chapter_reveal", "dark", """
+    <style>
+    @keyframes titleUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes barGrow{from{width:0}to{width:80px}}
+    </style>
+    <div style="padding:80px 100px;font-family:%(font)s;color:white;display:flex;flex-direction:column;height:100%%;">
+      <div style="margin-top:auto;margin-bottom:auto;">
+        <div style="font-size:14px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
+             color:%(sky)s;animation:titleUp 0.6s ease-out forwards;opacity:0;">Act II</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;margin-top:20px;
+             animation:titleUp 0.8s ease-out 0.3s forwards;opacity:0;">The</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;
+             animation:titleUp 0.8s ease-out 0.5s forwards;opacity:0;">Compression</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;
+             animation:titleUp 0.8s ease-out 0.7s forwards;opacity:0;">Paradox</div>
+        <div style="height:4px;background:%(sky)s;margin-top:36px;animation:barGrow 0.6s ease-out 1.2s forwards;width:0;"></div>
+      </div>
+    </div>"""),
+
+    # ── 06 TURBOQUANT ──────────────────────────────────
     ("06_turboquant_counter", "light", """
     <style>
     @keyframes count45{0%%{content:'0.0×'}25%%{content:'1.2×'}50%%{content:'2.8×'}75%%{content:'3.9×'}100%%{content:'4.5×'}}
@@ -55,7 +144,102 @@ ANIMATIONS = [
         <div style="font-size:18px;color:%(gray)s;margin-top:8px;">degradation</div></div>
     </div>"""),
 
-    # Act III — Pipeline steps
+    # ── 07 SILENT RANKING ──────────────────────────────
+    ("07_three_columns", "dark", """
+    <style>
+    @keyframes colIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+    <div style="display:flex;gap:24px;padding:40px;font-family:%(font)s;color:white;">
+      <div style="flex:1;padding:24px;border-left:4px solid %(berry)s;
+           animation:colIn 0.6s ease-out 0.2s forwards;opacity:0;">
+        <div style="font-size:16px;font-weight:900;color:%(berry)s;margin-bottom:8px;">The Math</div>
+        <div style="font-size:56px;font-weight:900;">2/π</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:6px;">bias at 1-bit</div></div>
+      <div style="flex:1;padding:24px;border-left:4px solid %(sand)s;
+           animation:colIn 0.6s ease-out 0.6s forwards;opacity:0;">
+        <div style="font-size:16px;font-weight:900;color:%(sand)s;margin-bottom:8px;">The System</div>
+        <div style="font-size:28px;font-weight:900;">Broken Compass</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:6px;">Cosine stops reflecting similarity</div></div>
+      <div style="flex:1;padding:24px;border-left:4px solid %(gray)s;
+           animation:colIn 0.6s ease-out 1.0s forwards;opacity:0;">
+        <div style="font-size:16px;font-weight:900;color:%(gray)s;margin-bottom:8px;">The Consequence</div>
+        <div style="font-size:28px;font-weight:900;">Invisible Degradation</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:6px;">No error. Just worse answers.</div></div>
+    </div>"""),
+
+    # ── 08 ZERO-BIAS ───────────────────────────────────
+    ("08_formula_reveal", "dark", """
+    <style>
+    @keyframes zoomIn{from{opacity:0;transform:scale(0.5)}to{opacity:1;transform:scale(1)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    </style>
+    <div style="padding:60px;font-family:%(font)s;color:white;">
+      <div style="font-size:20px;color:%(sky)s;font-weight:700;margin-bottom:16px;
+           animation:fadeIn 0.6s ease-out forwards;">QJL correction</div>
+      <div style="font-size:64px;font-weight:900;animation:zoomIn 0.8s ease-out 0.4s forwards;opacity:0;">
+        Inner products are now</div>
+      <div style="font-size:64px;font-weight:900;color:%(sky)s;
+           animation:zoomIn 0.8s ease-out 0.8s forwards;opacity:0;">provably unbiased.</div>
+      <div style="height:4px;width:60px;background:%(leaf)s;margin-top:40px;
+           animation:fadeIn 0.5s ease-out 1.5s forwards;opacity:0;"></div>
+      <div style="font-size:18px;color:%(gray)s;margin-top:16px;
+           animation:fadeIn 0.6s ease-out 1.8s forwards;opacity:0;">3,957s → 0.002s indexing</div>
+    </div>"""),
+
+    # ── 09 QUANT LANDSCAPE ─────────────────────────────
+    ("09_table_highlight", "light", """
+    <style>
+    @keyframes rowIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes highlightRow{from{background:transparent}to{background:rgba(52,82,219,0.1)}}
+    </style>
+    <div style="padding:40px;font-family:%(font)s;color:%(dark)s;">
+      <table style="width:100%%;border-collapse:collapse;font-size:17px;">
+        <tr style="border-bottom:2px solid %(dark)s;">
+          <th style="text-align:left;padding:12px;">Algorithm</th>
+          <th style="text-align:center;padding:12px;">Unbiased</th>
+          <th style="text-align:center;padding:12px;">Codebook-Free</th>
+          <th style="text-align:center;padding:12px;">GPU-Native</th>
+          <th style="text-align:center;padding:12px;">Data-Oblivious</th></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 0.2s forwards;opacity:0;">
+          <td style="padding:12px;color:%(gray)s;">PQ / OPQ</td>
+          <td style="text-align:center;">✗</td><td style="text-align:center;">✗</td>
+          <td style="text-align:center;">✗</td><td style="text-align:center;">✗</td></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 0.5s forwards;opacity:0;">
+          <td style="padding:12px;color:%(gray)s;">ScaNN</td>
+          <td style="text-align:center;">✗</td><td style="text-align:center;">✗</td>
+          <td style="text-align:center;">partial</td><td style="text-align:center;">✗</td></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 0.8s forwards;opacity:0;">
+          <td style="padding:12px;color:%(gray)s;">RaBitQ</td>
+          <td style="text-align:center;">✗</td><td style="text-align:center;">✗</td>
+          <td style="text-align:center;">✓</td><td style="text-align:center;">✗</td></tr>
+        <tr style="animation:rowIn 0.4s ease-out 1.2s forwards,highlightRow 0.5s ease-out 1.5s forwards;
+            opacity:0;border-bottom:2px solid %(sky)s;">
+          <td style="padding:12px;font-weight:900;color:%(sky)s;">TurboQuant</td>
+          <td style="text-align:center;color:%(sky)s;font-weight:900;">✓</td>
+          <td style="text-align:center;color:%(sky)s;font-weight:900;">✓</td>
+          <td style="text-align:center;color:%(sky)s;font-weight:900;">✓</td>
+          <td style="text-align:center;color:%(sky)s;font-weight:900;">✓</td></tr>
+      </table>
+    </div>"""),
+
+    # ── 10 TURBO DEMO ──────────────────────────────────
+    ("10_qr_pulse", "dark", """
+    <style>
+    @keyframes pulse{0%%{box-shadow:0 0 0 0 rgba(52,82,219,0.4)}70%%{box-shadow:0 0 0 30px rgba(52,82,219,0)}100%%{box-shadow:0 0 0 0 rgba(52,82,219,0)}}
+    @keyframes fadeIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+    </style>
+    <div style="display:flex;align-items:center;justify-content:center;height:100%%;font-family:%(font)s;">
+      <div style="text-align:center;animation:fadeIn 0.8s ease-out forwards;">
+        <div style="width:240px;height:240px;border:3px solid %(sky)s;border-radius:12px;
+             display:flex;align-items:center;justify-content:center;
+             background:rgba(52,82,219,0.08);animation:pulse 2s infinite;margin:0 auto;">
+          <div><div style="font-size:52px;font-weight:900;color:%(sky)s;">QR</div>
+            <div style="font-size:13px;color:%(gray)s;margin-top:6px;">Scan to try live</div></div></div>
+        <div style="margin-top:20px;font-size:20px;font-weight:700;font-family:monospace;color:%(sky)s;">wor.ai/turbo-quant</div>
+      </div>
+    </div>"""),
+
+    # ── 11 PIPELINE STEPS ──────────────────────────────
     ("11_pipeline_steps", "dark", """
     <style>
     @keyframes stepIn{from{opacity:0.15;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
@@ -75,21 +259,7 @@ ANIMATIONS = [
       <div class="step" style="animation-delay:2.0s;">Cite</div>
     </div>"""),
 
-    # Act III — 71% counter
-    ("13_stat_counter", "light", """
-    <style>
-    @keyframes countUp{0%%{content:'0'}10%%{content:'8'}20%%{content:'17'}30%%{content:'29'}
-    40%%{content:'38'}50%%{content:'48'}60%%{content:'55'}70%%{content:'62'}80%%{content:'67'}
-    90%%{content:'70'}100%%{content:'71'}}
-    .num::after{content:'71';font-size:200px;font-weight:900;line-height:0.82;letter-spacing:-10px;
-    color:%(sky)s;animation:countUp 2s steps(10) forwards;}
-    </style>
-    <div style="padding:40px;font-family:%(font)s;">
-      <div><span class="num"></span><span style="font-size:130px;font-weight:900;color:%(sky)s;">%%</span></div>
-      <div style="font-size:22px;color:%(dark)s;margin-top:8px;">LLM win rate on complex reasoning</div>
-    </div>"""),
-
-    # Graph nodes for RLM demo
+    # ── 12 GRAPH NODES (RLM) ───────────────────────────
     ("12_graph_nodes", "dark", """
     <style>
     @keyframes nodeIn{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
@@ -115,7 +285,63 @@ ANIMATIONS = [
       <text x="325" y="285" text-anchor="middle" fill="white" font-size="12" font-weight="700" font-family="Helvetica Neue,sans-serif">Entity</text>
     </svg>"""),
 
-    # Act III — Distillation pipeline
+    # ── 13 STAT COUNTER (71%) ──────────────────────────
+    ("13_stat_counter", "light", """
+    <style>
+    @keyframes countUp{0%%{content:'0'}10%%{content:'8'}20%%{content:'17'}30%%{content:'29'}
+    40%%{content:'38'}50%%{content:'48'}60%%{content:'55'}70%%{content:'62'}80%%{content:'67'}
+    90%%{content:'70'}100%%{content:'71'}}
+    .num::after{content:'71';font-size:200px;font-weight:900;line-height:0.82;letter-spacing:-10px;
+    color:%(sky)s;animation:countUp 2s steps(10) forwards;}
+    </style>
+    <div style="padding:40px;font-family:%(font)s;">
+      <div><span class="num"></span><span style="font-size:130px;font-weight:900;color:%(sky)s;">%%</span></div>
+      <div style="font-size:22px;color:%(dark)s;margin-top:8px;">LLM win rate on complex reasoning</div>
+    </div>"""),
+
+    # ── 14 SEPARATION ──────────────────────────────────
+    ("14_separation_panels", "dark", """
+    <style>
+    @keyframes slideL{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideR{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    </style>
+    <div style="display:flex;gap:24px;padding:40px;font-family:%(font)s;color:white;align-items:center;">
+      <div style="flex:1;padding:36px;border-top:4px solid %(sky)s;background:rgba(52,82,219,0.05);
+           animation:slideL 0.7s ease-out 0.3s forwards;opacity:0;">
+        <div style="font-size:28px;font-weight:900;color:%(sky)s;margin-bottom:8px;">LLM Explores</div>
+        <div style="font-size:16px;color:%(gray)s;line-height:1.6;">Navigation breadth<br>Graph traversal<br>Multi-hop reasoning</div></div>
+      <div style="font-size:40px;color:%(gray)s;animation:fadeIn 0.5s ease-out 0.8s forwards;opacity:0;">×</div>
+      <div style="flex:1;padding:36px;border-top:4px solid %(leaf)s;background:rgba(34,162,134,0.05);
+           animation:slideR 0.7s ease-out 0.6s forwards;opacity:0;">
+        <div style="font-size:28px;font-weight:900;color:%(leaf)s;margin-bottom:8px;">Vectors Rank</div>
+        <div style="font-size:16px;color:%(gray)s;line-height:1.6;">Cosine similarity<br>Geometric precision<br>Final ordering</div></div>
+    </div>"""),
+
+    # ── 15 MODEL GAP ───────────────────────────────────
+    ("15_model_cards", "light", """
+    <style>
+    @keyframes cardIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+    <div style="display:flex;gap:20px;padding:40px;font-family:%(font)s;color:%(dark)s;">
+      <div style="flex:1;padding:28px;border-top:4px solid %(sky)s;
+           animation:cardIn 0.6s ease-out 0.2s forwards;opacity:0;">
+        <div style="font-size:18px;font-weight:900;">Claude Haiku</div>
+        <div style="font-size:60px;font-weight:900;color:%(sky)s;line-height:1;letter-spacing:-3px;margin-top:8px;">+4.37pp</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:6px;">Strong gain</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid %(sand)s;
+           animation:cardIn 0.6s ease-out 0.6s forwards;opacity:0;">
+        <div style="font-size:18px;font-weight:900;">Gemini Flash Lite</div>
+        <div style="font-size:60px;font-weight:900;color:%(sand)s;line-height:1;letter-spacing:-3px;margin-top:8px;">+0.84pp</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:6px;">Marginal</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid %(berry)s;
+           animation:cardIn 0.6s ease-out 1.0s forwards;opacity:0;">
+        <div style="font-size:18px;font-weight:900;">Gemma 4</div>
+        <div style="font-size:60px;font-weight:900;color:%(berry)s;line-height:1;letter-spacing:-3px;margin-top:8px;">−0.78pp</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:6px;">Negative</div></div>
+    </div>"""),
+
+    # ── 17 DISTILLATION PIPELINE ───────────────────────
     ("17_distillation_pipeline", "dark", """
     <style>
     @keyframes slideRight{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
@@ -131,7 +357,50 @@ ANIMATIONS = [
       <div class="box" style="background:%(leaf)s;animation-delay:1.5s;">Gemma on-device</div>
     </div>"""),
 
-    # Act IV — Checklist
+    # ── 18 SLM EDGE ────────────────────────────────────
+    ("18_slm_props", "dark", """
+    <style>
+    @keyframes propIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+    </style>
+    <div style="display:flex;gap:24px;padding:40px;font-family:%(font)s;color:white;">
+      <div style="flex:1;padding:28px;border-left:4px solid %(leaf)s;
+           animation:propIn 0.6s ease-out 0.2s forwards;opacity:0;">
+        <div style="font-size:24px;font-weight:900;color:%(leaf)s;">Secure</div>
+        <div style="font-size:15px;color:%(gray)s;margin-top:6px;">Data never leaves the device</div></div>
+      <div style="flex:1;padding:28px;border-left:4px solid %(sky)s;
+           animation:propIn 0.6s ease-out 0.6s forwards;opacity:0;">
+        <div style="font-size:24px;font-weight:900;color:%(sky)s;">Fast</div>
+        <div style="font-size:15px;color:%(gray)s;margin-top:6px;">Sub-second, no round-trip</div></div>
+      <div style="flex:1;padding:28px;border-left:4px solid %(sand)s;
+           animation:propIn 0.6s ease-out 1.0s forwards;opacity:0;">
+        <div style="font-size:24px;font-weight:900;color:%(sand)s;">Yours</div>
+        <div style="font-size:15px;color:%(gray)s;margin-top:6px;">Trained on your graph</div></div>
+    </div>"""),
+
+    # ── 19 CONNECTED DATA ──────────────────────────────
+    ("19_connected_steps", "dark", """
+    <style>
+    @keyframes itemIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+    <div style="padding:40px;font-family:%(font)s;color:white;">
+      <div style="display:flex;gap:20px;margin-bottom:32px;align-items:flex-start;
+           animation:itemIn 0.6s ease-out 0.2s forwards;opacity:0;">
+        <div style="font-size:44px;font-weight:900;color:%(sky)s;line-height:1;min-width:60px;">01</div>
+        <div><div style="font-size:22px;font-weight:900;">Connectivity enables distillation</div>
+          <div style="font-size:15px;color:%(gray)s;">Connected data teaches navigation</div></div></div>
+      <div style="display:flex;gap:20px;margin-bottom:32px;align-items:flex-start;
+           animation:itemIn 0.6s ease-out 0.7s forwards;opacity:0;">
+        <div style="font-size:44px;font-weight:900;color:%(sky)s;line-height:1;min-width:60px;">02</div>
+        <div><div style="font-size:22px;font-weight:900;">Connected data multiplies</div>
+          <div style="font-size:15px;color:%(gray)s;">Cross-property links compound</div></div></div>
+      <div style="display:flex;gap:20px;align-items:flex-start;
+           animation:itemIn 0.6s ease-out 1.2s forwards;opacity:0;">
+        <div style="font-size:44px;font-weight:900;color:%(sky)s;line-height:1;min-width:60px;">03</div>
+        <div><div style="font-size:22px;font-weight:900;">Disconnected = dead end</div>
+          <div style="font-size:15px;color:%(gray)s;">Without structure, training has no signal</div></div></div>
+    </div>"""),
+
+    # ── 20 FLOOR IS SET ────────────────────────────────
     ("20_checklist", "dark", """
     <style>
     @keyframes checkIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
@@ -155,25 +424,62 @@ ANIMATIONS = [
         <div style="font-size:20px;font-weight:900;">Data Connectivity</div></div>
     </div>"""),
 
-    # Act V — Four pillars
+    # ── 21 MOAT = GRAPH ────────────────────────────────
     ("21_four_pillars", "dark", """
     <style>
     @keyframes pillarIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .pillar{flex:1;padding:20px;border-top:3px solid %(sky)s;animation:pillarIn 0.6s ease-out forwards;
-            opacity:0;font-family:%(font)s;color:white;}
     </style>
-    <div style="display:flex;gap:12px;padding:40px;">
-      <div class="pillar" style="animation-delay:0s;background:rgba(52,82,219,0.05);">
+    <div style="display:flex;gap:12px;padding:40px;font-family:%(font)s;color:white;">
+      <div style="flex:1;padding:20px;border-top:3px solid %(sky)s;background:rgba(52,82,219,0.05);
+           animation:pillarIn 0.6s ease-out 0s forwards;opacity:0;">
         <div style="font-size:15px;font-weight:900;">Limitless Context</div></div>
-      <div class="pillar" style="animation-delay:0.3s;background:rgba(52,82,219,0.05);">
+      <div style="flex:1;padding:20px;border-top:3px solid %(sky)s;background:rgba(52,82,219,0.05);
+           animation:pillarIn 0.6s ease-out 0.3s forwards;opacity:0;">
         <div style="font-size:15px;font-weight:900;">Billion-Scale Search</div></div>
-      <div class="pillar" style="animation-delay:0.6s;background:rgba(52,82,219,0.05);">
+      <div style="flex:1;padding:20px;border-top:3px solid %(sky)s;background:rgba(52,82,219,0.05);
+           animation:pillarIn 0.6s ease-out 0.6s forwards;opacity:0;">
         <div style="font-size:15px;font-weight:900;">On-Device Intelligence</div></div>
-      <div class="pillar" style="animation-delay:0.9s;background:%(sky)s;">
+      <div style="flex:1;padding:20px;border-top:3px solid %(sky)s;background:%(sky)s;
+           animation:pillarIn 0.6s ease-out 0.9s forwards;opacity:0;">
         <div style="font-size:15px;font-weight:900;">Navigable KG</div></div>
     </div>"""),
 
-    # Act V — Ghost citations counter
+    # ── 22 SEO PLAYBOOK (chapter) ──────────────────────
+    ("22_playbook_chapter", "dark", """
+    <style>
+    @keyframes titleUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes barGrow{from{width:0}to{width:80px}}
+    </style>
+    <div style="padding:80px 100px;font-family:%(font)s;color:white;display:flex;flex-direction:column;height:100%%;">
+      <div style="margin-top:auto;margin-bottom:auto;">
+        <div style="font-size:14px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
+             color:%(sky)s;animation:titleUp 0.6s ease-out forwards;opacity:0;">Act V</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;margin-top:20px;
+             animation:titleUp 0.8s ease-out 0.3s forwards;opacity:0;">The SEO</div>
+        <div style="font-size:100px;font-weight:900;line-height:0.92;letter-spacing:-5px;
+             animation:titleUp 0.8s ease-out 0.5s forwards;opacity:0;">Playbook</div>
+        <div style="height:4px;background:%(sky)s;margin-top:36px;animation:barGrow 0.6s ease-out 1.0s forwards;width:0;"></div>
+      </div>
+    </div>"""),
+
+    # ── 23 VISIBILITY SHIFT ────────────────────────────
+    ("23_visibility_columns", "light", """
+    <style>
+    @keyframes slideL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes slideR{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+    </style>
+    <div style="display:flex;gap:32px;padding:40px;font-family:%(font)s;color:%(dark)s;height:100%%;">
+      <div style="flex:1;padding:28px;border-top:4px solid %(gray)s;
+           animation:slideL 0.7s ease-out 0.3s forwards;opacity:0;">
+        <div style="font-size:13px;font-weight:700;color:%(gray)s;letter-spacing:4px;text-transform:uppercase;text-decoration:line-through;margin-bottom:16px;">Mentions Era</div>
+        <div style="font-size:16px;color:%(gray)s;line-height:2;">Present in training data<br>Passive: be cited<br>Measured by: brand recall</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid %(sky)s;
+           animation:slideR 0.7s ease-out 0.6s forwards;opacity:0;">
+        <div style="font-size:13px;font-weight:700;color:%(sky)s;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">Reasoning Utility</div>
+        <div style="font-size:16px;color:%(dark)s;line-height:2;">Entities connected & traversable<br>Active: be <span style="color:%(sky)s;font-weight:700;">reachable</span><br>Measured by: citation in agent outputs</div></div>
+    </div>"""),
+
+    # ── 24 GHOST CITATIONS ─────────────────────────────
     ("24_ghost_counter", "light", """
     <style>
     @keyframes count7{0%%{content:'0'}20%%{content:'1'}40%%{content:'3'}60%%{content:'5'}80%%{content:'6'}100%%{content:'7'}}
@@ -185,28 +491,51 @@ ANIMATIONS = [
       <div style="font-size:28px;font-weight:700;color:%(dark)s;margin-top:12px;">Ghost Citations</div>
     </div>"""),
 
-    # Act V — Explore/Verify/Cite panels
-    ("27_explore_verify_cite", "dark", """
+    # ── 25 GPT READS DIFFERENTLY ───────────────────────
+    ("25_era_table", "light", """
     <style>
-    @keyframes panelIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-    .panel{flex:1;padding:28px;animation:panelIn 0.6s ease-out forwards;opacity:0;font-family:%(font)s;color:white;}
+    @keyframes rowIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes colHighlight{from{background:transparent}to{background:rgba(52,82,219,0.08)}}
     </style>
-    <div style="display:flex;gap:20px;padding:40px;">
-      <div class="panel" style="animation-delay:0s;border-top:4px solid %(sky)s;background:rgba(52,82,219,0.05);">
-        <div style="font-size:24px;font-weight:900;color:%(sky)s;">Explore</div>
-        <div style="font-size:18px;font-weight:700;margin-top:8px;">Can the agent find you?</div></div>
-      <div class="panel" style="animation-delay:0.4s;border-top:4px solid %(leaf)s;background:rgba(34,162,134,0.05);">
-        <div style="font-size:24px;font-weight:900;color:%(leaf)s;">Verify</div>
-        <div style="font-size:18px;font-weight:700;margin-top:8px;">Can the agent confirm you?</div></div>
-      <div class="panel" style="animation-delay:0.8s;border-top:4px solid %(sand)s;background:rgba(194,164,29,0.05);">
-        <div style="font-size:24px;font-weight:900;color:%(sand)s;">Cite</div>
-        <div style="font-size:18px;font-weight:700;margin-top:8px;">Can the agent cite you?</div></div>
+    <div style="padding:40px;font-family:%(font)s;color:%(dark)s;">
+      <table style="width:100%%;border-collapse:collapse;font-size:16px;">
+        <tr style="border-bottom:2px solid %(dark)s;">
+          <th style="text-align:left;padding:10px;width:18%%;"></th>
+          <th style="text-align:center;padding:10px;color:%(gray)s;">GPT-3 era</th>
+          <th style="text-align:center;padding:10px;color:%(gray)s;">GPT-4 era</th>
+          <th style="text-align:center;padding:10px;color:%(sky)s;font-weight:900;">GPT-5.4 era</th></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 0.2s forwards;opacity:0;">
+          <td style="padding:10px;font-weight:700;">Method</td>
+          <td style="text-align:center;color:%(gray)s;">Pattern match</td>
+          <td style="text-align:center;color:%(gray)s;">Semantic similarity</td>
+          <td style="text-align:center;font-weight:700;color:%(sky)s;">Graph traversal</td></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 0.5s forwards;opacity:0;">
+          <td style="padding:10px;font-weight:700;">Unit</td>
+          <td style="text-align:center;color:%(gray)s;">Token</td>
+          <td style="text-align:center;color:%(gray)s;">Embedding</td>
+          <td style="text-align:center;font-weight:700;color:%(sky)s;">Entity</td></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 0.8s forwards;opacity:0;">
+          <td style="padding:10px;font-weight:700;">What matters</td>
+          <td style="text-align:center;color:%(gray)s;">Keyword density</td>
+          <td style="text-align:center;color:%(gray)s;">Vector proximity</td>
+          <td style="text-align:center;font-weight:700;color:%(sky)s;">Structural connectivity</td></tr>
+        <tr style="border-bottom:1px solid #e0e0e0;animation:rowIn 0.4s ease-out 1.1s forwards;opacity:0;">
+          <td style="padding:10px;font-weight:700;">Content's job</td>
+          <td style="text-align:center;color:%(gray)s;">Be present</td>
+          <td style="text-align:center;color:%(gray)s;">Be similar</td>
+          <td style="text-align:center;font-weight:700;color:%(sky)s;">Be reachable</td></tr>
+        <tr style="border-bottom:2px solid %(dark)s;animation:rowIn 0.4s ease-out 1.4s forwards;opacity:0;">
+          <td style="padding:10px;font-weight:700;">Failure mode</td>
+          <td style="text-align:center;color:%(gray)s;">Not indexed</td>
+          <td style="text-align:center;color:%(gray)s;">Low similarity</td>
+          <td style="text-align:center;font-weight:700;color:%(berry)s;">Disconnected</td></tr>
+      </table>
     </div>"""),
 
-    # Act V — Consistency bars
+    # ── 26 CONSISTENCY BARS ────────────────────────────
     ("26_consistency_bars", "light", """
     <style>
-    @keyframes barGrow{from{width:0%%}to{width:var(--w)}}
+    @keyframes barGrow{from{width:0}to{width:var(--w)}}
     .bar{height:40px;border-radius:3px;animation:barGrow 1.2s ease-out forwards;margin-bottom:20px;}
     .label{font-size:15px;color:%(gray)s;margin-bottom:6px;font-family:%(font)s;}
     </style>
@@ -219,22 +548,92 @@ ANIMATIONS = [
       <div class="bar" style="--w:92%%;background:%(sky)s;animation-delay:0.6s;"></div>
     </div>"""),
 
-    # Act V — AutoResearch panels
+    # ── 27 EXPLORE → VERIFY → CITE ────────────────────
+    ("27_explore_verify_cite", "dark", """
+    <style>
+    @keyframes panelIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    </style>
+    <div style="display:flex;gap:20px;padding:40px;font-family:%(font)s;color:white;">
+      <div style="flex:1;padding:28px;border-top:4px solid %(sky)s;background:rgba(52,82,219,0.05);
+           animation:panelIn 0.6s ease-out 0s forwards;opacity:0;">
+        <div style="font-size:24px;font-weight:900;color:%(sky)s;">Explore</div>
+        <div style="font-size:18px;font-weight:700;margin-top:8px;">Can the agent find you?</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid %(leaf)s;background:rgba(34,162,134,0.05);
+           animation:panelIn 0.6s ease-out 0.4s forwards;opacity:0;">
+        <div style="font-size:24px;font-weight:900;color:%(leaf)s;">Verify</div>
+        <div style="font-size:18px;font-weight:700;margin-top:8px;">Can the agent confirm you?</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid %(sand)s;background:rgba(194,164,29,0.05);
+           animation:panelIn 0.6s ease-out 0.8s forwards;opacity:0;">
+        <div style="font-size:24px;font-weight:900;color:%(sand)s;">Cite</div>
+        <div style="font-size:18px;font-weight:700;margin-top:8px;">Can the agent cite you?</div></div>
+    </div>"""),
+
+    # ── 28 AUTORESEARCH ────────────────────────────────
     ("28_autoresearch_panels", "dark", """
     <style>
     @keyframes panelIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-    .panel{flex:1;padding:28px;animation:panelIn 0.6s ease-out forwards;opacity:0;font-family:%(font)s;color:white;}
     </style>
-    <div style="display:flex;gap:20px;padding:40px;">
-      <div class="panel" style="animation-delay:0s;border-top:4px solid %(leaf)s;background:rgba(34,162,134,0.05);">
+    <div style="display:flex;gap:20px;padding:40px;font-family:%(font)s;color:white;">
+      <div style="flex:1;padding:28px;border-top:4px solid %(leaf)s;background:rgba(34,162,134,0.05);
+           animation:panelIn 0.6s ease-out 0s forwards;opacity:0;">
         <div style="font-size:24px;font-weight:900;color:%(leaf)s;">Discover</div>
         <div style="font-size:15px;color:%(gray)s;margin-top:8px;">Surface gaps. No manual curation.</div></div>
-      <div class="panel" style="animation-delay:0.4s;border-top:4px solid %(sky)s;background:rgba(52,82,219,0.05);">
+      <div style="flex:1;padding:28px;border-top:4px solid %(sky)s;background:rgba(52,82,219,0.05);
+           animation:panelIn 0.6s ease-out 0.4s forwards;opacity:0;">
         <div style="font-size:24px;font-weight:900;color:%(sky)s;">Synthesize</div>
         <div style="font-size:15px;color:%(gray)s;margin-top:8px;">Grounded, citable summaries.</div></div>
-      <div class="panel" style="animation-delay:0.8s;border-top:4px solid %(sand)s;background:rgba(194,164,29,0.05);">
+      <div style="flex:1;padding:28px;border-top:4px solid %(sand)s;background:rgba(194,164,29,0.05);
+           animation:panelIn 0.6s ease-out 0.8s forwards;opacity:0;">
         <div style="font-size:24px;font-weight:900;color:%(sand)s;">Act</div>
         <div style="font-size:15px;color:%(gray)s;margin-top:8px;">Queue remediation. Graph improves.</div></div>
+    </div>"""),
+
+    # ── 29 WELL-CONNECTED ──────────────────────────────
+    ("29_connection_boxes", "light", """
+    <style>
+    @keyframes boxIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}
+    </style>
+    <div style="display:flex;gap:24px;padding:40px;font-family:%(font)s;color:%(dark)s;">
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:%(sky)s;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">Internal</div>
+        <div style="padding:20px;border:2px solid #e0e0e0;margin-bottom:10px;
+             animation:boxIn 0.5s ease-out 0.2s forwards;opacity:0;">
+          <div style="font-size:16px;font-weight:700;">Products → Editorial</div></div>
+        <div style="padding:20px;border:2px solid #e0e0e0;
+             animation:boxIn 0.5s ease-out 0.5s forwards;opacity:0;">
+          <div style="font-size:16px;font-weight:700;">Docs → Support → Product</div></div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:13px;font-weight:700;color:%(sky)s;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">External</div>
+        <div style="padding:20px;border:2px solid #e0e0e0;margin-bottom:10px;
+             animation:boxIn 0.5s ease-out 0.8s forwards;opacity:0;">
+          <div style="font-size:16px;font-weight:700;">Wikidata / Schema.org</div></div>
+        <div style="padding:20px;border:2px solid #e0e0e0;
+             animation:boxIn 0.5s ease-out 1.1s forwards;opacity:0;">
+          <div style="font-size:16px;font-weight:700;">Partner Ecosystems</div></div>
+      </div>
+    </div>"""),
+
+    # ── 30 CLOSING ─────────────────────────────────────
+    ("30_closing_reveal", "dark", """
+    <style>
+    @keyframes lineIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes barGrow{from{width:0}to{width:80px}}
+    </style>
+    <div style="padding:80px 100px;font-family:%(font)s;color:white;display:flex;flex-direction:column;height:100%%;">
+      <div style="margin-top:auto;margin-bottom:auto;">
+        <div style="font-size:48px;font-weight:900;line-height:1.1;
+             animation:lineIn 0.7s ease-out 0.2s forwards;opacity:0;">Context windows will keep growing.</div>
+        <div style="font-size:48px;font-weight:900;line-height:1.1;
+             animation:lineIn 0.7s ease-out 0.5s forwards;opacity:0;">Models will keep getting cheaper.</div>
+        <div style="font-size:48px;font-weight:900;line-height:1.1;color:%(sky)s;margin-top:24px;
+             animation:lineIn 0.7s ease-out 1.0s forwards;opacity:0;">The variable that compounds</div>
+        <div style="font-size:48px;font-weight:900;line-height:1.1;color:%(sky)s;
+             animation:lineIn 0.7s ease-out 1.3s forwards;opacity:0;">is your data connectivity.</div>
+        <div style="height:4px;background:%(sky)s;margin-top:40px;animation:barGrow 0.6s ease-out 1.8s forwards;width:0;"></div>
+        <div style="font-size:24px;font-weight:700;margin-top:24px;
+             animation:lineIn 0.6s ease-out 2.2s forwards;opacity:0;">Structure your knowledge now.</div>
+      </div>
     </div>"""),
 ]
 
@@ -242,7 +641,7 @@ ANIMATIONS = [
 async def main():
     from playwright.async_api import async_playwright
     OUT.mkdir(exist_ok=True)
-    print(f"Generating {len(ANIMATIONS)} content animations...\n")
+    print(f"Generating {len(ANIMATIONS)} animations (full deck)...\n")
 
     async with async_playwright() as p:
         browser = await p.chromium.launch()
@@ -260,7 +659,6 @@ async def main():
                   font-family:{T['font']};overflow:hidden;}}
             </style></head><body>{html}</body></html>"""
 
-            # GIF: capture 30 frames over 3s
             page = await browser.new_page(
                 viewport={"width": T["W"], "height": T["H"]}, device_scale_factor=1)
             await page.set_content(full_html, wait_until="domcontentloaded")
@@ -271,13 +669,12 @@ async def main():
                 frame_bytes = await page.screenshot(type="png")
                 frames.append(frame_bytes)
 
-            # Save preview (last frame)
+            # Save preview
             preview_path = OUT / f"{name}_preview.png"
             with open(preview_path, "wb") as f:
                 f.write(frames[-1])
 
-            # Save individual frames for GIF assembly
-            # Use PIL if available, otherwise just save frames
+            # Build GIF
             try:
                 from PIL import Image
                 import io
@@ -291,13 +688,14 @@ async def main():
                     duration=100, loop=0, optimize=True)
                 print(f"  {name}.gif ✓ ({gif_path.stat().st_size//1024} KB)")
             except ImportError:
-                print(f"  {name}_preview.png ✓ (PIL not available for GIF)")
+                print(f"  {name}_preview.png ✓ (PIL not available)")
 
             await page.close()
 
         await browser.close()
 
-    print(f"\n✓ All animations saved to {OUT}/")
+    total = sum(f.stat().st_size for f in OUT.glob("*.gif")) // 1024 if list(OUT.glob("*.gif")) else 0
+    print(f"\n✓ All {len(ANIMATIONS)} animations → {OUT}/ ({total} KB total)")
 
 
 if __name__ == "__main__":
