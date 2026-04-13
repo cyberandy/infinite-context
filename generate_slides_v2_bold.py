@@ -60,12 +60,12 @@ def html_slide(body, bg, fg, ca_svg=""):
 body{{width:{T['W']}px;height:{T['H']}px;background:{bg};
 font-family:{T['font']};overflow:hidden;position:relative;color:{fg};}}
 .ca{{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;}}
-.c{{position:relative;z-index:1;width:100%;height:100%;padding:80px 100px;
+.c{{position:relative;z-index:1;width:100%;height:100%;padding:60px 70px;
 display:flex;flex-direction:column;}}
-.section{{font-size:14px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
-color:{T['sky']};margin-bottom:28px;}}
+.section{{font-size:16px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
+color:{T['sky']};margin-bottom:24px;}}
 .h{{font-weight:900;line-height:0.92;letter-spacing:-5px;}}
-.bar{{height:4px;margin-top:36px;}}
+.bar{{height:5px;margin-top:32px;}}
 </style></head><body>
 <div class="ca"><svg width="{T['W']}" height="{T['H']}" xmlns="http://www.w3.org/2000/svg">{ca_svg}</svg></div>
 <div class="c">{body}</div>
@@ -84,11 +84,11 @@ def slide_01():
     return dark(f"""
     <div style="margin-top:auto;margin-bottom:auto;">
       <div class="section">SEO Week 2026</div>
-      <div class="h" style="font-size:120px;max-width:700px;">Structure<br>Is the<br>Moat</div>
-      <div class="bar" style="width:80px;background:{T['sky']};"></div>
-      <div style="font-size:22px;color:{T['gray']};margin-top:28px;max-width:700px;line-height:1.6;">
+      <div class="h" style="font-size:130px;max-width:800px;">Structure<br>Is the<br>Moat</div>
+      <div class="bar" style="width:90px;background:{T['sky']};"></div>
+      <div style="font-size:26px;color:{T['gray']};margin-top:28px;max-width:800px;line-height:1.5;">
         What the context explosion means for how AI<br>finds, navigates and ranks your content</div>
-      <div style="font-size:17px;color:{T['gray']};opacity:0.6;margin-top:40px;">Andrea Volpini · WordLift</div>
+      <div style="font-size:20px;color:{T['gray']};opacity:0.6;margin-top:36px;">Andrea Volpini · WordLift</div>
     </div>""", ca)
 
 def slide_02():
@@ -98,38 +98,38 @@ def slide_02():
     cards = ""
     for title, desc, color in panels:
         cards += f'''<div style="flex:1;padding:32px;border-top:4px solid {color};background:rgba(255,255,255,0.03);">
-          <div style="font-size:22px;font-weight:900;margin-bottom:12px;white-space:pre-line;">{title}</div>
-          <div style="font-size:16px;color:{T['gray']};white-space:pre-line;">{desc}</div></div>'''
+          <div style="font-size:26px;font-weight:900;margin-bottom:12px;white-space:pre-line;">{title}</div>
+          <div style="font-size:20px;color:{T['gray']};white-space:pre-line;">{desc}</div></div>'''
     return dark(f"""
     <div class="section">Act I — The Context Explosion</div>
-    <div class="h" style="font-size:72px;margin-bottom:48px;">Why Context Has<br>a Weight Problem</div>
-    <div style="display:flex;gap:20px;margin-top:auto;margin-bottom:80px;">{cards}</div>""", ca)
+    <div class="h" style="font-size:80px;margin-bottom:48px;">Why Context Has<br>a Weight Problem</div>
+    <div style="display:flex;gap:20px;margin-top:auto;margin-bottom:60px;">{cards}</div>""", ca)
 
 def slide_03():
     """FIX — Two-column, but BOLD treatment"""
     ca = svg_grid(G30, 70, 12, T['sky'], 0.15, 800, 0)
     return dark(f"""
     <div class="section">Act I — The Context Explosion</div>
-    <div class="h" style="font-size:72px;margin-bottom:48px;">
+    <div class="h" style="font-size:80px;margin-bottom:44px;">
       Search Was a Query.<br><span style="color:{T['sky']};">Now It's a Journey.</span></div>
     <div style="display:flex;gap:40px;">
       <div style="flex:1;padding:32px;border-top:4px solid {T['gray']};">
-        <div style="font-size:14px;font-weight:700;color:{T['gray']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">The Old Model</div>
-        <div style="font-size:18px;color:{T['gray']};line-height:2;">
+        <div style="font-size:16px;font-weight:700;color:{T['gray']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">The Old Model</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:2;">
           Stateless · Symmetric · One-shot<br>
           Keyword match + link authority<br>
-          <span style="font-weight:700;color:{T['white']};font-size:22px;">The document was the unit</span></div>
+          <span style="font-weight:700;color:{T['white']};font-size:26px;">The document was the unit</span></div>
       </div>
       <div style="flex:1;padding:32px;border-top:4px solid {T['sky']};">
-        <div style="font-size:14px;font-weight:700;color:{T['sky']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">The Agent Model</div>
-        <div style="font-size:18px;color:{T['gray']};line-height:2;">
+        <div style="font-size:16px;font-weight:700;color:{T['sky']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">The Agent Model</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:2;">
           Stateful · Asymmetric · Multi-hop<br>
           Seeds entities → traverses graph<br>
-          <span style="font-weight:700;color:{T['white']};font-size:22px;">The entity is the unit</span></div>
+          <span style="font-weight:700;color:{T['white']};font-size:26px;">The entity is the unit</span></div>
       </div>
     </div>
-    <div style="padding:20px 28px;border-left:4px solid {T['berry']};margin-top:auto;margin-bottom:60px;">
-      <div style="font-size:17px;color:{T['gray']};font-style:italic;">
+    <div style="padding:20px 28px;border-left:4px solid {T['berry']};margin-top:auto;margin-bottom:40px;">
+      <div style="font-size:20px;color:{T['gray']};font-style:italic;">
         "If your entities aren't connected, you're invisible to the traversal."</div>
     </div>""", ca)
 
@@ -141,12 +141,12 @@ def slide_04():
     items = ""
     for num, title, desc in shifts:
         items += f'''<div style="display:flex;gap:28px;margin-bottom:44px;align-items:flex-start;">
-          <div style="font-size:56px;font-weight:900;color:{T['sky']};line-height:1;min-width:80px;">{num}</div>
-          <div><div style="font-size:28px;font-weight:900;margin-bottom:8px;">{title}</div>
-          <div style="font-size:18px;color:{T['gray']};">{desc}</div></div></div>'''
+          <div style="font-size:64px;font-weight:900;color:{T['sky']};line-height:1;min-width:90px;">{num}</div>
+          <div><div style="font-size:32px;font-weight:900;margin-bottom:8px;">{title}</div>
+          <div style="font-size:22px;color:{T['gray']};">{desc}</div></div></div>'''
     return dark(f"""
     <div class="section">Act I — The Context Explosion</div>
-    <div class="h" style="font-size:64px;margin-bottom:56px;">Three Shifts That Changed<br>What 'Findable' Means</div>
+    <div class="h" style="font-size:72px;margin-bottom:52px;">Three Shifts That Changed<br>What 'Findable' Means</div>
     {items}""", ca)
 
 
@@ -159,9 +159,9 @@ def slide_05():
     return dark(f"""
     <div style="margin-top:auto;margin-bottom:auto;">
       <div class="section" style="margin-bottom:40px;">Act II</div>
-      <div class="h" style="font-size:120px;max-width:1100px;">The<br>Compression<br>Paradox</div>
-      <div class="bar" style="width:80px;background:{T['sky']};"></div>
-      <div style="font-size:20px;color:{T['gray']};margin-top:28px;">
+      <div class="h" style="font-size:130px;max-width:1200px;">The<br>Compression<br>Paradox</div>
+      <div class="bar" style="width:90px;background:{T['sky']};"></div>
+      <div style="font-size:24px;color:{T['gray']};margin-top:28px;">
         High compression · Zero overhead · Geometric accuracy<br>
         <span style="color:{T['berry']};">Get it wrong and your similarity scores are silently biased.</span></div>
     </div>""", ca)
@@ -170,62 +170,62 @@ def slide_06():
     ca = svg_grid(G90s, 40, 8, T['sky'], 0.06, 60, 680)
     return light(f"""
     <div class="section">Act II — The Compression Solution</div>
-    <div style="font-size:56px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">TurboQuant</div>
-    <div style="font-size:20px;color:{T['gray']};margin-top:8px;">Geometric compression without information loss</div>
-    <div style="display:flex;gap:60px;margin-top:64px;align-items:flex-end;">
-      <div><div style="font-size:130px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-6px;">4.5×</div>
-        <div style="font-size:20px;color:{T['gray']};margin-top:8px;">smaller KV cache</div></div>
-      <div><div style="font-size:130px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-6px;">8×</div>
-        <div style="font-size:20px;color:{T['gray']};margin-top:8px;">faster attention</div></div>
-      <div><div style="font-size:130px;font-weight:900;line-height:0.9;color:{T['dark2']};letter-spacing:-6px;">0</div>
-        <div style="font-size:20px;color:{T['gray']};margin-top:8px;">retrieval degradation</div></div>
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">TurboQuant</div>
+    <div style="font-size:24px;color:{T['gray']};margin-top:8px;">Geometric compression without information loss</div>
+    <div style="display:flex;gap:70px;margin-top:56px;align-items:flex-end;">
+      <div><div style="font-size:150px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-7px;">4.5×</div>
+        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">smaller KV cache</div></div>
+      <div><div style="font-size:150px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-7px;">8×</div>
+        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">faster attention</div></div>
+      <div><div style="font-size:150px;font-weight:900;line-height:0.9;color:{T['dark2']};letter-spacing:-7px;">0</div>
+        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">retrieval degradation</div></div>
     </div>
-    <div class="bar" style="width:60px;background:{T['berry']};margin-top:48px;"></div>
-    <div style="font-size:17px;color:{T['gray']};margin-top:20px;">
+    <div class="bar" style="width:60px;background:{T['berry']};margin-top:40px;"></div>
+    <div style="font-size:20px;color:{T['gray']};margin-top:20px;">
       PolarQuant → QJL · Data-oblivious · GPU-native · Zero codebook</div>""", ca)
 
 def slide_07():
     ca = svg_grid(G90, 30, 8, T['berry'], 0.05, 1200, 100)
     return dark(f"""
     <div class="section">Act II — The Compression Solution</div>
-    <div class="h" style="font-size:64px;max-width:1200px;">Why 'Compressing Your<br>Embeddings' Can Silently<br>Destroy Your Rankings</div>
-    <div style="display:flex;gap:60px;margin-top:64px;">
-      <div style="flex:1;padding:28px;border-left:4px solid {T['berry']};">
-        <div style="font-size:18px;font-weight:900;color:{T['berry']};margin-bottom:8px;">The Math</div>
-        <div style="font-size:64px;font-weight:900;margin-bottom:8px;">2/π</div>
-        <div style="font-size:16px;color:{T['gray']};">bias at 1-bit quantization</div></div>
-      <div style="flex:1;padding:28px;border-left:4px solid {T['sand']};">
-        <div style="font-size:18px;font-weight:900;color:{T['sand']};margin-bottom:8px;">The System</div>
-        <div style="font-size:32px;font-weight:900;margin-bottom:8px;">Broken Compass</div>
-        <div style="font-size:16px;color:{T['gray']};">Cosine similarity stops reflecting true similarity</div></div>
-      <div style="flex:1;padding:28px;border-left:4px solid {T['gray']};">
-        <div style="font-size:18px;font-weight:900;color:{T['gray']};margin-bottom:8px;">The Consequence</div>
-        <div style="font-size:32px;font-weight:900;margin-bottom:8px;">Invisible Degradation</div>
-        <div style="font-size:16px;color:{T['gray']};">No error. No alert. Just worse answers.</div></div>
+    <div class="h" style="font-size:72px;max-width:1300px;">Why 'Compressing Your<br>Embeddings' Can Silently<br>Destroy Your Rankings</div>
+    <div style="display:flex;gap:48px;margin-top:56px;">
+      <div style="flex:1;padding:28px;border-left:5px solid {T['berry']};">
+        <div style="font-size:22px;font-weight:900;color:{T['berry']};margin-bottom:8px;">The Math</div>
+        <div style="font-size:72px;font-weight:900;margin-bottom:8px;">2/π</div>
+        <div style="font-size:20px;color:{T['gray']};">bias at 1-bit quantization</div></div>
+      <div style="flex:1;padding:28px;border-left:5px solid {T['sand']};">
+        <div style="font-size:22px;font-weight:900;color:{T['sand']};margin-bottom:8px;">The System</div>
+        <div style="font-size:36px;font-weight:900;margin-bottom:8px;">Broken Compass</div>
+        <div style="font-size:20px;color:{T['gray']};">Cosine similarity stops reflecting true similarity</div></div>
+      <div style="flex:1;padding:28px;border-left:5px solid {T['gray']};">
+        <div style="font-size:22px;font-weight:900;color:{T['gray']};margin-bottom:8px;">The Consequence</div>
+        <div style="font-size:36px;font-weight:900;margin-bottom:8px;">Invisible Degradation</div>
+        <div style="font-size:20px;color:{T['gray']};">No error. No alert. Just worse answers.</div></div>
     </div>""", ca)
 
 def slide_08():
     ca = svg_grid(G90, 50, 10, T['sky'], 0.05, 1100, 0)
     return dark(f"""
     <div class="section">Act II — The Compression Solution</div>
-    <div class="h" style="font-size:72px;max-width:1000px;">The 1-Bit<br>Zero-Bias<br>Realignment</div>
-    <div style="margin-top:48px;padding:36px;border:2px solid rgba(255,255,255,0.1);
-                background:rgba(52,82,219,0.05);max-width:900px;">
-      <div style="font-size:24px;line-height:1.7;">
+    <div class="h" style="font-size:80px;max-width:1100px;">The 1-Bit<br>Zero-Bias<br>Realignment</div>
+    <div style="margin-top:44px;padding:36px;border:2px solid rgba(255,255,255,0.1);
+                background:rgba(52,82,219,0.05);max-width:1000px;">
+      <div style="font-size:28px;line-height:1.7;">
         <span style="color:{T['sky']};font-weight:700;">QJL correction →</span>
         Inner product estimates are now<br><span style="font-weight:900;">provably unbiased.</span></div>
     </div>
-    <div class="bar" style="width:60px;background:{T['leaf']};margin-top:56px;"></div>
-    <div style="font-size:18px;color:{T['gray']};margin-top:16px;">
+    <div class="bar" style="width:60px;background:{T['leaf']};margin-top:48px;"></div>
+    <div style="font-size:22px;color:{T['gray']};margin-top:16px;">
       3,957s → 0.002s indexing at billion scale</div>""", ca)
 
 def slide_09():
     ca = svg_grid(G90s, 30, 6, T['sky'], 0.05, 1400, 500)
     return light(f"""
     <div class="section">Act II — The Compression Solution</div>
-    <div style="font-size:56px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">The Quantization Landscape</div>
-    <div style="margin-top:40px;">
-      <table style="width:100%;border-collapse:collapse;font-size:18px;">
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">The Quantization Landscape</div>
+    <div style="margin-top:36px;">
+      <table style="width:100%;border-collapse:collapse;font-size:22px;">
         <tr style="border-bottom:2px solid {T['dark2']};">
           <th style="text-align:left;padding:16px;font-weight:700;">Algorithm</th>
           <th style="text-align:center;padding:16px;font-weight:700;">Unbiased</th>
@@ -280,12 +280,12 @@ def slide_10():
 
 def slide_11():
     ca = svg_grid(G110, 70, 14, T['sky'], 0.25, 0, 0)
-    box = "padding:14px 28px;font-size:17px;font-weight:700;border:2px solid rgba(255,255,255,0.25);"
+    box = "padding:16px 32px;font-size:20px;font-weight:700;border:2px solid rgba(255,255,255,0.25);"
     return dark(f"""
     <div style="margin-top:auto;margin-bottom:auto;">
       <div class="section">Act III — The Navigator</div>
-      <div class="h" style="font-size:88px;">It Doesn't Search.</div>
-      <div class="h" style="font-size:88px;color:{T['sky']};">It Explores.</div>
+      <div class="h" style="font-size:96px;">It Doesn't Search.</div>
+      <div class="h" style="font-size:96px;color:{T['sky']};">It Explores.</div>
     </div>
     <div style="display:flex;align-items:center;gap:14px;margin-bottom:80px;">
       <div style="{box}">Seed</div><div style="color:{T['gray']};font-size:22px;">→</div>
@@ -381,17 +381,17 @@ def slide_14():
     ca = svg_grid(G110, 40, 8, T['sky'], 0.04, 0, 700)
     return dark(f"""
     <div class="section">Act III — The Navigator</div>
-    <div class="h" style="font-size:64px;margin-bottom:56px;">Separation of Concerns</div>
-    <div style="display:flex;gap:40px;margin-top:auto;margin-bottom:100px;">
-      <div style="flex:1;padding:40px;border-top:4px solid {T['sky']};background:rgba(52,82,219,0.05);">
-        <div style="font-size:32px;font-weight:900;margin-bottom:12px;color:{T['sky']};">LLM Explores</div>
-        <div style="font-size:20px;color:{T['gray']};line-height:1.6;">Navigation breadth<br>Graph traversal<br>Multi-hop reasoning</div></div>
-      <div style="display:flex;align-items:center;font-size:48px;color:{T['gray']};">×</div>
-      <div style="flex:1;padding:40px;border-top:4px solid {T['leaf']};background:rgba(34,162,134,0.05);">
-        <div style="font-size:32px;font-weight:900;margin-bottom:12px;color:{T['leaf']};">Vectors Rank</div>
-        <div style="font-size:20px;color:{T['gray']};line-height:1.6;">Cosine similarity<br>Geometric precision<br>Final ordering</div></div>
+    <div class="h" style="font-size:72px;margin-bottom:48px;">Separation of Concerns</div>
+    <div style="display:flex;gap:40px;margin-top:auto;margin-bottom:80px;">
+      <div style="flex:1;padding:40px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.05);">
+        <div style="font-size:36px;font-weight:900;margin-bottom:12px;color:{T['sky']};">LLM Explores</div>
+        <div style="font-size:24px;color:{T['gray']};line-height:1.6;">Navigation breadth<br>Graph traversal<br>Multi-hop reasoning</div></div>
+      <div style="display:flex;align-items:center;font-size:56px;color:{T['gray']};">×</div>
+      <div style="flex:1;padding:40px;border-top:5px solid {T['leaf']};background:rgba(34,162,134,0.05);">
+        <div style="font-size:36px;font-weight:900;margin-bottom:12px;color:{T['leaf']};">Vectors Rank</div>
+        <div style="font-size:24px;color:{T['gray']};line-height:1.6;">Cosine similarity<br>Geometric precision<br>Final ordering</div></div>
     </div>
-    <div style="font-size:22px;color:{T['gray']};margin-bottom:80px;">
+    <div style="font-size:26px;color:{T['gray']};margin-bottom:60px;">
       <span style="color:{T['white']};font-weight:700;">Content must be structurally reachable.</span></div>""", ca)
 
 def slide_15():
@@ -399,17 +399,17 @@ def slide_15():
     models = [("Claude Haiku","+4.37pp",T['sky'],"Strong gain"),("Gemini Flash Lite","+0.84pp",T['sand'],"Marginal"),("Gemma 4","−0.78pp",T['berry'],"Negative")]
     cards = ""
     for name, delta, color, note in models:
-        cards += f'''<div style="flex:1;padding:32px;border-top:4px solid {color};background:{color}08;">
-          <div style="font-size:22px;font-weight:900;color:{T['dark2']};margin-bottom:8px;">{name}</div>
-          <div style="font-size:72px;font-weight:900;color:{color};line-height:1;letter-spacing:-3px;">{delta}</div>
-          <div style="font-size:16px;color:{T['gray']};margin-top:8px;">{note}</div></div>'''
+        cards += f'''<div style="flex:1;padding:32px;border-top:5px solid {color};background:{color}08;">
+          <div style="font-size:26px;font-weight:900;color:{T['dark2']};margin-bottom:8px;">{name}</div>
+          <div style="font-size:80px;font-weight:900;color:{color};line-height:1;letter-spacing:-4px;">{delta}</div>
+          <div style="font-size:20px;color:{T['gray']};margin-top:8px;">{note}</div></div>'''
     return light(f"""
     <div class="section">Act III — The Navigator</div>
-    <div style="font-size:56px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">The Model Capability Gap</div>
-    <div style="font-size:22px;color:{T['gray']};margin-top:8px;">The gap is behavioral, not architectural</div>
-    <div style="display:flex;gap:24px;margin-top:56px;">{cards}</div>
-    <div class="bar" style="width:50px;background:{T['sky']};margin-top:48px;"></div>
-    <div style="font-size:18px;color:{T['gray']};margin-top:16px;">
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">The Model Capability Gap</div>
+    <div style="font-size:24px;color:{T['gray']};margin-top:8px;">The gap is behavioral, not architectural</div>
+    <div style="display:flex;gap:24px;margin-top:48px;">{cards}</div>
+    <div class="bar" style="width:50px;background:{T['sky']};margin-top:40px;"></div>
+    <div style="font-size:22px;color:{T['gray']};margin-top:16px;">
       The right model with the right graph beats a bigger model without one</div>""", ca)
 
 def slide_17():
@@ -452,18 +452,18 @@ def slide_18():
     ca = svg_grid(G90s, 40, 8, T['sky'], 0.05, 1400, 0)
     return dark(f"""
     <div class="section">Act IV — The SLM Navigator</div>
-    <div class="h" style="font-size:72px;max-width:1000px;margin-bottom:48px;">
+    <div class="h" style="font-size:80px;max-width:1100px;margin-bottom:44px;">
       Your Next Agent<br>Doesn't Live in the Cloud</div>
-    <div style="display:flex;gap:32px;margin-top:auto;margin-bottom:80px;">
-      <div style="flex:1;padding:32px;border-left:4px solid {T['leaf']};">
-        <div style="font-size:28px;font-weight:900;color:{T['leaf']};margin-bottom:8px;">Secure</div>
-        <div style="font-size:18px;color:{T['gray']};">Data never leaves the device</div></div>
-      <div style="flex:1;padding:32px;border-left:4px solid {T['sky']};">
-        <div style="font-size:28px;font-weight:900;color:{T['sky']};margin-bottom:8px;">Fast</div>
-        <div style="font-size:18px;color:{T['gray']};">Sub-second, no round-trip</div></div>
-      <div style="flex:1;padding:32px;border-left:4px solid {T['sand']};">
-        <div style="font-size:28px;font-weight:900;color:{T['sand']};margin-bottom:8px;">Yours</div>
-        <div style="font-size:18px;color:{T['gray']};">Trained on your graph</div></div>
+    <div style="display:flex;gap:32px;margin-top:auto;margin-bottom:60px;">
+      <div style="flex:1;padding:32px;border-left:5px solid {T['leaf']};">
+        <div style="font-size:32px;font-weight:900;color:{T['leaf']};margin-bottom:8px;">Secure</div>
+        <div style="font-size:22px;color:{T['gray']};">Data never leaves the device</div></div>
+      <div style="flex:1;padding:32px;border-left:5px solid {T['sky']};">
+        <div style="font-size:32px;font-weight:900;color:{T['sky']};margin-bottom:8px;">Fast</div>
+        <div style="font-size:22px;color:{T['gray']};">Sub-second, no round-trip</div></div>
+      <div style="flex:1;padding:32px;border-left:5px solid {T['sand']};">
+        <div style="font-size:32px;font-weight:900;color:{T['sand']};margin-bottom:8px;">Yours</div>
+        <div style="font-size:22px;color:{T['gray']};">Trained on your graph</div></div>
     </div>
     <div style="font-size:14px;color:{T['gray']};opacity:0.5;margin-bottom:60px;">
       github.com/wordlift/google-ai-edge/tree/main/wordlift-graphql</div>""", ca)
@@ -513,18 +513,18 @@ def slide_21():
     ca_leaf = svg_grid(G110s, 35, 10, T['leaf'], 0.08, T['W']-50*10, T['H']-35*10)
     return dark(f"""
     <div style="margin-top:auto;margin-bottom:auto;">
-      <div class="h" style="font-size:72px;">The Moat Is Not<br>the Model.</div>
-      <div class="h" style="font-size:72px;color:{T['sky']};margin-top:8px;">The Moat Is<br>the Graph.</div>
+      <div class="h" style="font-size:80px;">The Moat Is Not<br>the Model.</div>
+      <div class="h" style="font-size:80px;color:{T['sky']};margin-top:8px;">The Moat Is<br>the Graph.</div>
     </div>
     <div style="display:flex;gap:16px;margin-bottom:80px;">
       <div style="flex:1;padding:24px;border-top:3px solid {T['sky']};background:rgba(52,82,219,0.05);">
-        <div style="font-size:16px;font-weight:900;">Limitless Context</div></div>
-      <div style="flex:1;padding:24px;border-top:3px solid {T['sky']};background:rgba(52,82,219,0.05);">
-        <div style="font-size:16px;font-weight:900;">Billion-Scale Search</div></div>
-      <div style="flex:1;padding:24px;border-top:3px solid {T['sky']};background:rgba(52,82,219,0.05);">
-        <div style="font-size:16px;font-weight:900;">On-Device Intelligence</div></div>
-      <div style="flex:1;padding:24px;border-top:3px solid {T['sky']};background:{T['sky']};">
-        <div style="font-size:16px;font-weight:900;">Navigable Knowledge Graph</div></div>
+        <div style="font-size:20px;font-weight:900;">Limitless Context</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid {T['sky']};background:rgba(52,82,219,0.05);">
+        <div style="font-size:20px;font-weight:900;">Billion-Scale Search</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid {T['sky']};background:rgba(52,82,219,0.05);">
+        <div style="font-size:20px;font-weight:900;">On-Device Intelligence</div></div>
+      <div style="flex:1;padding:28px;border-top:4px solid {T['sky']};background:{T['sky']};">
+        <div style="font-size:20px;font-weight:900;">Navigable Knowledge Graph</div></div>
     </div>""", ca_sky + ca_leaf)
 
 def slide_22():
@@ -532,9 +532,9 @@ def slide_22():
     return dark(f"""
     <div style="margin-top:auto;margin-bottom:auto;">
       <div class="section" style="margin-bottom:40px;">Act V</div>
-      <div class="h" style="font-size:120px;">The SEO<br>Playbook</div>
-      <div class="bar" style="width:80px;background:{T['sky']};"></div>
-      <div style="font-size:24px;color:{T['gray']};margin-top:28px;">What to actually do about all of this</div>
+      <div class="h" style="font-size:130px;">The SEO<br>Playbook</div>
+      <div class="bar" style="width:90px;background:{T['sky']};"></div>
+      <div style="font-size:28px;color:{T['gray']};margin-top:28px;">What to actually do about all of this</div>
     </div>""", ca)
 
 def slide_23():
@@ -542,18 +542,18 @@ def slide_23():
     ca = svg_grid(G110s, 35, 8, T['sky'], 0.05, T['W']-60*8, 200)
     return light(f"""
     <div class="section">Act V — The SEO Playbook</div>
-    <div style="font-size:56px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">
       AI Visibility Is Shifting</div>
     <div style="font-size:22px;color:{T['gray']};margin-top:8px;">From mentions to reasoning utility</div>
-    <div style="display:flex;gap:32px;margin-top:48px;">
-      <div style="flex:1;padding:32px;border-top:4px solid {T['gray']};">
-        <div style="font-size:14px;font-weight:700;color:{T['gray']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;text-decoration:line-through;">Mentions Era</div>
-        <div style="font-size:18px;color:{T['gray']};line-height:2;">
+    <div style="display:flex;gap:32px;margin-top:40px;">
+      <div style="flex:1;padding:32px;border-top:5px solid {T['gray']};">
+        <div style="font-size:16px;font-weight:700;color:{T['gray']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;text-decoration:line-through;">Mentions Era</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:2;">
           Present in training data<br>Passive: be cited<br>Measured by: brand recall</div>
       </div>
-      <div style="flex:1;padding:32px;border-top:4px solid {T['sky']};">
-        <div style="font-size:14px;font-weight:700;color:{T['sky']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">Reasoning Utility</div>
-        <div style="font-size:18px;color:{T['dark2']};line-height:2;">
+      <div style="flex:1;padding:32px;border-top:5px solid {T['sky']};">
+        <div style="font-size:16px;font-weight:700;color:{T['sky']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">Reasoning Utility</div>
+        <div style="font-size:22px;color:{T['dark2']};line-height:2;">
           Entities connected and traversable<br>Active: be <span style="color:{T['sky']};font-weight:700;">reachable</span>, verifiable, citable<br>Measured by: citation in agent outputs</div>
       </div>
     </div>
@@ -568,11 +568,11 @@ def slide_24():
     return light(f"""
     <div class="section">Act V — The SEO Playbook</div>
     <div style="margin-top:32px;">
-      <div style="font-size:280px;font-weight:900;line-height:0.82;letter-spacing:-14px;
-                  color:{T['berry']};">7<span style="font-size:180px;">%</span></div>
-      <div style="font-size:32px;font-weight:700;color:{T['dark2']};margin-top:12px;">Ghost Citations</div>
+      <div style="font-size:300px;font-weight:900;line-height:0.82;letter-spacing:-16px;
+                  color:{T['berry']};">7<span style="font-size:200px;">%</span></div>
+      <div style="font-size:36px;font-weight:700;color:{T['dark2']};margin-top:12px;">Ghost Citations</div>
       <div class="bar" style="width:60px;background:{T['berry']};margin-top:24px;"></div>
-      <div style="font-size:18px;color:{T['gray']};margin-top:20px;max-width:900px;line-height:1.6;">
+      <div style="font-size:22px;color:{T['gray']};margin-top:20px;max-width:1000px;line-height:1.6;">
         AI agents cite content that never appeared in the top-10.<br>
         They navigated there through entity links — not ranking signals.</div>
     </div>
@@ -588,9 +588,9 @@ def slide_25():
     ca = svg_grid(G110s, 25, 6, T['sky'], 0.04, 1500, 600)
     return light(f"""
     <div class="section">Act V — The SEO Playbook</div>
-    <div style="font-size:56px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">How AI Reads Your Content</div>
-    <div style="margin-top:36px;">
-      <table style="width:100%;border-collapse:collapse;font-size:18px;">
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">How AI Reads Your Content</div>
+    <div style="margin-top:32px;">
+      <table style="width:100%;border-collapse:collapse;font-size:20px;">
         <tr style="border-bottom:2px solid {T['dark2']};">
           <th style="text-align:left;padding:14px;font-weight:700;width:20%;"></th>
           <th style="text-align:center;padding:14px;font-weight:700;color:{T['gray']};">GPT-3 era</th>
@@ -728,12 +728,12 @@ def slide_30():
     ca_berry = svg_grid(G30, 30, 6, T['berry'], 0.04, 0, 0)
     return dark(f"""
     <div style="margin-top:auto;margin-bottom:auto;max-width:1100px;">
-      <div class="h" style="font-size:56px;">Context windows will keep growing.<br>Models will keep getting cheaper.</div>
+      <div class="h" style="font-size:64px;">Context windows will keep growing.<br>Models will keep getting cheaper.</div>
       <div style="margin-top:32px;">
-        <div class="h" style="font-size:56px;color:{T['sky']};">The variable that compounds<br>is your data connectivity.</div>
+        <div class="h" style="font-size:64px;color:{T['sky']};">The variable that compounds<br>is your data connectivity.</div>
       </div>
-      <div class="bar" style="width:80px;background:{T['sky']};margin-top:48px;"></div>
-      <div style="font-size:28px;margin-top:28px;font-weight:700;">Structure your knowledge now.</div>
+      <div class="bar" style="width:90px;background:{T['sky']};margin-top:44px;"></div>
+      <div style="font-size:32px;margin-top:28px;font-weight:700;">Structure your knowledge now.</div>
     </div>
     <div style="margin-top:auto;margin-bottom:80px;display:flex;gap:32px;">
       <div style="font-size:15px;color:{T['gray']};"><span style="font-weight:700;color:{T['sky']};">Paper</span> · github.com/wordlift/rlm-on-kg</div>
