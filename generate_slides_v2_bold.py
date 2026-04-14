@@ -198,22 +198,57 @@ def slide_05():
     </div>""", ca)
 
 def slide_06():
+    """TurboQuant — Three Stage Pipeline — LIGHT"""
     ca = svg_grid(G90s, 40, 8, T['sky'], 0.06, 60, 680)
     return light(f"""
     <div class="section">Act II — The Compression Solution</div>
-    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">TurboQuant</div>
-    <div style="font-size:24px;color:{T['gray']};margin-top:8px;">Geometric compression without information loss</div>
-    <div style="display:flex;gap:70px;margin-top:56px;align-items:flex-end;">
-      <div><div style="font-size:150px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-7px;">4.5×</div>
-        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">smaller KV cache</div></div>
-      <div><div style="font-size:150px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-7px;">8×</div>
-        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">faster attention</div></div>
-      <div><div style="font-size:150px;font-weight:900;line-height:0.9;color:{T['dark2']};letter-spacing:-7px;">0</div>
-        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">retrieval degradation</div></div>
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};margin-bottom:8px;">TurboQuant</div>
+    <div style="font-size:24px;color:{T['gray']};margin-bottom:48px;">Geometric compression without information loss</div>
+    
+    <div style="display:flex;gap:40px;align-items:stretch;">
+      <!-- The Pipeline -->
+      <div style="flex:1.2;display:flex;flex-direction:column;gap:20px;">
+        <div style="padding:28px;background:rgba(0,0,0,0.03);border-left:8px solid {T['dark2']};">
+          <div style="font-size:14px;font-weight:700;color:{T['gray']};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Stage 1</div>
+          <div style="font-size:28px;font-weight:900;margin-bottom:4px;">PolarQuant</div>
+          <div style="font-size:18px;color:{T['gray']};">Norm + Angle Decomposition</div>
+        </div>
+        <div style="display:flex;justify-content:center;color:{T['gray']};font-size:24px;">↓</div>
+        <div style="padding:28px;background:rgba(52,82,219,0.05);border-left:8px solid {T['sky']};">
+          <div style="font-size:14px;font-weight:700;color:{T['sky']};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Stage 2</div>
+          <div style="font-size:28px;font-weight:900;margin-bottom:4px;">QJL Transform</div>
+          <div style="font-size:18px;color:{T['gray']};">Zero-bias Realignment</div>
+        </div>
+        <div style="display:flex;justify-content:center;color:{T['gray']};font-size:24px;">↓</div>
+        <div style="padding:28px;background:rgba(194,164,29,0.05);border-left:8px solid {T['sand']};">
+          <div style="font-size:14px;font-weight:700;color:{T['sand']};letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;">Stage 3</div>
+          <div style="font-size:28px;font-weight:900;margin-bottom:4px;">GPU-Native Kernel</div>
+          <div style="font-size:18px;color:{T['gray']};">Hardware-Aware Search</div>
+        </div>
+      </div>
+
+      <!-- The Results -->
+      <div style="flex:0.8;display:flex;flex-direction:column;justify-content:center;gap:40px;padding-left:40px;border-left:1px solid #eee;">
+        <div>
+          <div style="font-size:80px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-4px;">4.5×</div>
+          <div style="font-size:18px;color:{T['gray']};margin-top:8px;font-weight:700;">Smaller KV Cache</div>
+        </div>
+        <div>
+          <div style="font-size:80px;font-weight:900;line-height:0.9;color:{T['sky']};letter-spacing:-4px;">8×</div>
+          <div style="font-size:18px;color:{T['gray']};margin-top:8px;font-weight:700;">Faster Attention</div>
+        </div>
+        <div>
+          <div style="font-size:80px;font-weight:900;line-height:0.9;color:{T['dark2']};letter-spacing:-4px;">0</div>
+          <div style="font-size:18px;color:{T['gray']};margin-top:8px;font-weight:700;">Recall Degradation</div>
+        </div>
+      </div>
     </div>
-    <div class="bar" style="width:60px;background:{T['berry']};margin-top:40px;"></div>
-    <div style="font-size:20px;color:{T['gray']};margin-top:20px;">
-      PolarQuant → QJL · Data-oblivious · GPU-native · Zero codebook</div>""", ca)
+    
+    <div style="margin-top:auto;padding:20px 28px;border-left:5px solid {T['berry']};margin-bottom:40px;">
+      <div style="font-size:18px;color:{T['gray']};">
+        Data-oblivious: works on product catalogs, knowledge bases and UGC without re-training.
+      </div>
+    </div>""", ca)
 
 def slide_07():
     ca = svg_grid(G90, 30, 8, T['berry'], 0.05, 1200, 100)
