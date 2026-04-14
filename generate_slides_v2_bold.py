@@ -150,6 +150,37 @@ def slide_04():
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">{items}</div>""", ca)
 
 
+def slide_04b():
+    """NEW — Memory Layer Evidence (+29.6%) — LIGHT"""
+    ca = svg_grid(G90s, 30, 6, T['sky'], 0.04, 1400, 400)
+    return light(f"""
+    <div class="section">Act I — The Evidence</div>
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">
+      Structure Makes AI Smarter</div>
+    <div style="font-size:24px;color:{T['gray']};margin-top:8px;">3-tier experiment: how structured data changes retrieval accuracy</div>
+    <div style="display:flex;gap:28px;margin-top:48px;">
+      <div style="flex:1;padding:36px;border-top:5px solid {T['gray']};">
+        <div style="font-size:16px;font-weight:700;color:{T['gray']};letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">Layer 1</div>
+        <div style="font-size:28px;font-weight:900;margin-bottom:8px;">Plain HTML</div>
+        <div style="font-size:22px;color:{T['gray']};">Baseline accuracy</div>
+        <div style="font-size:64px;font-weight:900;color:{T['gray']};margin-top:16px;">—</div></div>
+      <div style="flex:1;padding:36px;border-top:5px solid {T['sand']};">
+        <div style="font-size:16px;font-weight:700;color:{T['sand']};letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">Layer 2</div>
+        <div style="font-size:28px;font-weight:900;margin-bottom:8px;">+ JSON-LD</div>
+        <div style="font-size:22px;color:{T['gray']};">Modest improvement</div>
+        <div style="font-size:64px;font-weight:900;color:{T['sand']};margin-top:16px;">+modest</div></div>
+      <div style="flex:1;padding:36px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.03);">
+        <div style="font-size:16px;font-weight:700;color:{T['sky']};letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">Layer 3</div>
+        <div style="font-size:28px;font-weight:900;margin-bottom:8px;">Enhanced Entity Pages</div>
+        <div style="font-size:22px;color:{T['gray']};">Standard RAG + Agentic RAG</div>
+        <div style="font-size:80px;font-weight:900;color:{T['sky']};margin-top:16px;letter-spacing:-4px;">+29.6%</div></div>
+    </div>
+    <div style="padding:16px 24px;border-left:5px solid {T['berry']};margin-top:auto;margin-bottom:40px;">
+      <div style="font-size:22px;color:{T['gray']};font-style:italic;">
+        The same content. The same model. The only variable was structure.</div>
+    </div>""", ca)
+
+
 # ═══════════════════════════════════════════════════════════
 # ACT II — COMPRESSION (5–10)
 # ═══════════════════════════════════════════════════════════
@@ -277,6 +308,67 @@ def slide_10():
 # ═══════════════════════════════════════════════════════════
 # ACT III — THE NAVIGATOR (11–17)
 # ═══════════════════════════════════════════════════════════
+
+def slide_10b():
+    """NEW — Context Timeline 2017→Today — DARK"""
+    ca = svg_grid(G30, 50, 10, T['sky'], 0.06, 0, 400)
+    return dark(f"""
+    <div class="section">Act III — The Navigator</div>
+    <div class="h" style="font-size:72px;margin-bottom:48px;">The Context Explosion<br>in Numbers</div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+    <div style="display:flex;gap:24px;align-items:flex-end;">
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:22px;color:{T['gray']};margin-bottom:8px;">2017</div>
+        <div style="height:60px;background:{T['gray']};opacity:0.3;border-radius:4px 4px 0 0;"></div>
+        <div style="font-size:18px;color:{T['gray']};margin-top:8px;">512 tokens</div>
+        <div style="font-size:14px;color:{T['gray']};opacity:0.5;">First WordLift model</div></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:22px;color:{T['gray']};margin-bottom:8px;">2020</div>
+        <div style="height:100px;background:{T['gray']};opacity:0.4;border-radius:4px 4px 0 0;"></div>
+        <div style="font-size:18px;color:{T['gray']};margin-top:8px;">4K tokens</div>
+        <div style="font-size:14px;color:{T['gray']};opacity:0.5;">GPT-3</div></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:22px;color:{T['gray']};margin-bottom:8px;">2023</div>
+        <div style="height:200px;background:{T['sand']};opacity:0.5;border-radius:4px 4px 0 0;"></div>
+        <div style="font-size:18px;color:{T['gray']};margin-top:8px;">128K tokens</div>
+        <div style="font-size:14px;color:{T['gray']};opacity:0.5;">GPT-4 Turbo</div></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:22px;color:{T['gray']};margin-bottom:8px;">2024</div>
+        <div style="height:340px;background:{T['sky']};opacity:0.6;border-radius:4px 4px 0 0;"></div>
+        <div style="font-size:18px;color:{T['gray']};margin-top:8px;">1M+ tokens</div>
+        <div style="font-size:14px;color:{T['gray']};opacity:0.5;">Gemini</div></div>
+      <div style="flex:1;text-align:center;">
+        <div style="font-size:22px;color:{T['sky']};font-weight:700;margin-bottom:8px;">2026</div>
+        <div style="height:420px;background:{T['sky']};border-radius:4px 4px 0 0;"></div>
+        <div style="font-size:20px;font-weight:700;color:{T['sky']};margin-top:8px;">∞ context</div>
+        <div style="font-size:14px;color:{T['sky']};opacity:0.7;">The question is now traversal</div></div>
+    </div>
+    </div>
+    <div style="font-size:22px;color:{T['gray']};margin-bottom:40px;">
+      <span style="color:{T['white']};font-weight:700;">Context windows grew 2,000,000×.</span> The question shifted from capacity to navigation.</div>""", ca)
+
+def slide_10c():
+    """NEW — Librarian vs Speed Reader — DARK"""
+    ca = svg_grid(G110, 40, 8, T['sky'], 0.06, T['W']-50*8, 300)
+    return dark(f"""
+    <div class="section">Act III — The Navigator</div>
+    <div class="h" style="font-size:72px;margin-bottom:auto;">Context Is Not a Bucket<br>to Fill. It's an Environment<br>to Explore.</div>
+    <div style="display:flex;gap:40px;margin-bottom:60px;">
+      <div style="flex:1;padding:40px;border-top:5px solid {T['gray']};">
+        <div style="font-size:16px;font-weight:700;color:{T['gray']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;text-decoration:line-through;">Speed Reader</div>
+        <div style="font-size:28px;font-weight:900;color:{T['gray']};margin-bottom:12px;">Traditional LLM</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:1.8;">
+          Scans everything sequentially<br>
+          Misses connections between sections<br>
+          Loses context in long documents</div></div>
+      <div style="flex:1;padding:40px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.05);">
+        <div style="font-size:16px;font-weight:700;color:{T['sky']};letter-spacing:4px;text-transform:uppercase;margin-bottom:20px;">Librarian</div>
+        <div style="font-size:28px;font-weight:900;color:{T['sky']};margin-bottom:12px;">RLM-on-KG</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:1.8;">
+          Navigates the catalog of knowledge<br>
+          Follows structural entity links<br>
+          Finds what's connected, not just similar</div></div>
+    </div>""", ca)
 
 def slide_11():
     ca = svg_grid(G110, 70, 14, T['sky'], 0.25, 0, 0)
@@ -411,6 +503,28 @@ def slide_15():
     <div class="bar" style="width:50px;background:{T['sky']};margin-top:40px;"></div>
     <div style="font-size:22px;color:{T['gray']};margin-top:16px;">
       The right model with the right graph beats a bigger model without one</div>""", ca)
+
+def slide_15b():
+    """NEW — GraphRAG Head-to-Head Benchmark — LIGHT"""
+    ca = svg_grid(G110s, 25, 6, T['sky'], 0.04, 1500, 200)
+    return light(f"""
+    <div class="section">Act III — The Navigator</div>
+    <div style="font-size:64px;font-weight:900;letter-spacing:-3px;color:{T['dark2']};">Head-to-Head:<br>RLM vs GraphRAG</div>
+    <div style="font-size:24px;color:{T['gray']};margin-top:8px;">Same benchmark. Same knowledge graph. Different approach.</div>
+    <div style="display:flex;gap:40px;margin-top:48px;">
+      <div style="flex:1;padding:40px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.03);">
+        <div style="font-size:20px;font-weight:700;color:{T['sky']};letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">RLM-on-KG</div>
+        <div style="font-size:100px;font-weight:900;color:{T['sky']};line-height:0.9;letter-spacing:-5px;">45.8</div>
+        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">F1 Score</div></div>
+      <div style="flex:1;padding:40px;border-top:5px solid {T['gray']};">
+        <div style="font-size:20px;font-weight:700;color:{T['gray']};letter-spacing:3px;text-transform:uppercase;margin-bottom:16px;">Microsoft GraphRAG</div>
+        <div style="font-size:100px;font-weight:900;color:{T['gray']};line-height:0.9;letter-spacing:-5px;">45.6</div>
+        <div style="font-size:22px;color:{T['gray']};margin-top:8px;">F1 Score</div></div>
+    </div>
+    <div class="bar" style="width:70px;background:{T['berry']};margin-top:40px;"></div>
+    <div style="font-size:24px;color:{T['gray']};margin-top:16px;">
+      When evidence is scattered across <span style="color:{T['sky']};font-weight:700;">11+ chunks</span>:
+      RLM wins <span style="color:{T['sky']};font-weight:700;">56%</span> of the time</div>""", ca)
 
 def slide_17():
     """NEW — Distillation Bridge — BOLD, minimal"""
@@ -646,30 +760,33 @@ def slide_26():
     </div>""", ca)
 
 def slide_27():
-    """Explore → Verify → Cite — DARK"""
+    """Explore → Verify → Cite — ELEVATED paradigm shift — DARK"""
     ca = svg_grid(G110, 55, 10, T['sky'], 0.10, T['W']-60*10, 0)
     return dark(f"""
-    <div class="section">Act V — The SEO Playbook</div>
-    <div class="h" style="font-size:56px;margin-bottom:8px;">
-      From <span style="text-decoration:line-through;color:{T['gray']};">Crawl-Index-Rank</span></div>
-    <div class="h" style="font-size:72px;color:{T['sky']};margin-bottom:56px;">Explore → Verify → Cite</div>
-    <div style="display:flex;gap:28px;">
-      <div style="flex:1;padding:32px;border-top:4px solid {T['sky']};background:rgba(52,82,219,0.05);">
-        <div style="font-size:28px;font-weight:900;color:{T['sky']};margin-bottom:12px;">Explore</div>
-        <div style="font-size:20px;font-weight:700;margin-bottom:8px;">Can the agent find you?</div>
-        <div style="font-size:15px;color:{T['gray']};">Entity links · stable URIs · navigable KG</div></div>
-      <div style="flex:1;padding:32px;border-top:4px solid {T['leaf']};background:rgba(34,162,134,0.05);">
-        <div style="font-size:28px;font-weight:900;color:{T['leaf']};margin-bottom:12px;">Verify</div>
-        <div style="font-size:20px;font-weight:700;margin-bottom:8px;">Can the agent confirm you?</div>
-        <div style="font-size:15px;color:{T['gray']};">Provenance · attribution · consistent IDs</div></div>
-      <div style="flex:1;padding:32px;border-top:4px solid {T['sand']};background:rgba(194,164,29,0.05);">
-        <div style="font-size:28px;font-weight:900;color:{T['sand']};margin-bottom:12px;">Cite</div>
-        <div style="font-size:20px;font-weight:700;margin-bottom:8px;">Can the agent cite you?</div>
-        <div style="font-size:15px;color:{T['gray']};">Stable URLs · canonical entities · machine-readable</div></div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
+      <div class="section">The New Paradigm</div>
+      <div style="font-size:48px;font-weight:900;text-decoration:line-through;color:{T['gray']};opacity:0.4;margin-bottom:16px;">
+        Crawl → Index → Rank</div>
+      <div class="h" style="font-size:88px;color:{T['sky']};margin-bottom:56px;">Explore → Verify → Cite</div>
+      <div style="display:flex;gap:28px;">
+        <div style="flex:1;padding:36px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.05);">
+          <div style="font-size:32px;font-weight:900;color:{T['sky']};margin-bottom:12px;">Explore</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:8px;">Can the agent find you?</div>
+          <div style="font-size:18px;color:{T['gray']};">Entity links · stable URIs · navigable KG</div></div>
+        <div style="flex:1;padding:36px;border-top:5px solid {T['leaf']};background:rgba(34,162,134,0.05);">
+          <div style="font-size:32px;font-weight:900;color:{T['leaf']};margin-bottom:12px;">Verify</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:8px;">Can the agent confirm you?</div>
+          <div style="font-size:18px;color:{T['gray']};">Provenance · attribution · consistent IDs</div></div>
+        <div style="flex:1;padding:36px;border-top:5px solid {T['sand']};background:rgba(194,164,29,0.05);">
+          <div style="font-size:32px;font-weight:900;color:{T['sand']};margin-bottom:12px;">Cite</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:8px;">Can the agent cite you?</div>
+          <div style="font-size:18px;color:{T['gray']};">Stable URLs · canonical entities · machine-readable</div></div>
+      </div>
     </div>
-    <div style="padding:16px 24px;border-left:4px solid {T['berry']};margin-top:auto;margin-bottom:60px;">
-      <div style="font-size:18px;color:{T['gray']};">
-        The pipeline has changed. The optimization targets have changed. Most content strategies haven't.</div>
+    <div style="padding:20px 28px;border-left:5px solid {T['berry']};margin-bottom:40px;">
+      <div style="font-size:24px;color:{T['gray']};">
+        The pipeline has changed. The optimization targets have changed.<br>
+        <span style="color:{T['white']};font-weight:700;">Most content strategies haven't.</span></div>
     </div>""", ca)
 
 def slide_28():
@@ -748,12 +865,15 @@ def slide_30():
 ALL_SLIDES = [
     ("01_title.png", slide_01), ("02_weight_problem.png", slide_02),
     ("03_query_to_journey.png", slide_03), ("04_three_shifts.png", slide_04),
+    ("04b_memory_layer.png", slide_04b),
     ("05_compression_paradox.png", slide_05), ("06_turboquant.png", slide_06),
     ("07_silent_ranking.png", slide_07), ("08_zero_bias.png", slide_08),
     ("09_quant_landscape.png", slide_09), ("10_turbo_demo.png", slide_10),
+    ("10b_context_timeline.png", slide_10b), ("10c_librarian.png", slide_10c),
     ("11_navigator.png", slide_11), ("12_rlm_demo.png", slide_12),
     ("13_conditional_advantage.png", slide_13), ("14_separation.png", slide_14),
-    ("15_model_gap.png", slide_15), ("17_distillation.png", slide_17),
+    ("15_model_gap.png", slide_15), ("15b_graphrag.png", slide_15b),
+    ("17_distillation.png", slide_17),
     ("18_slm_edge.png", slide_18), ("19_connected_data.png", slide_19),
     ("20_floor_set.png", slide_20), ("21_moat_graph.png", slide_21),
     ("22_seo_playbook_chapter.png", slide_22), ("23_visibility_shift.png", slide_23),

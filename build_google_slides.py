@@ -21,9 +21,14 @@ REPO = "https://raw.githubusercontent.com/cyberandy/infinite-context/main"
 # ── Slide order (matches slides_v2/) ──────────────────
 SLIDES = [
     "01_title", "02_weight_problem", "03_query_to_journey", "04_three_shifts",
+    "04b_memory_layer",
     "05_compression_paradox", "06_turboquant", "07_silent_ranking", "08_zero_bias",
-    "09_quant_landscape", "10_turbo_demo", "11_navigator", "12_rlm_demo",
-    "13_conditional_advantage", "14_separation", "15_model_gap", "17_distillation",
+    "09_quant_landscape", "10_turbo_demo",
+    "10b_context_timeline", "10c_librarian",
+    "11_navigator", "12_rlm_demo",
+    "13_conditional_advantage", "14_separation", "15_model_gap",
+    "15b_graphrag",
+    "17_distillation",
     "18_slm_edge", "19_connected_data", "20_floor_set", "21_moat_graph",
     "22_seo_playbook_chapter", "23_visibility_shift", "24_ghost_citations",
     "25_gpt_reads_differently", "26_consistency_not_crawling", "27_explore_verify_cite",
