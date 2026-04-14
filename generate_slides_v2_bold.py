@@ -765,25 +765,25 @@ def slide_27():
     return dark(f"""
     <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
       <div class="section">The New Paradigm</div>
-      <div style="font-size:48px;font-weight:900;text-decoration:line-through;color:{T['gray']};opacity:0.4;margin-bottom:16px;">
+      <div style="font-size:48px;font-weight:900;text-decoration:line-through;color:{T['gray']};opacity:0.4;margin-bottom:24px;">
         Crawl → Index → Rank</div>
-      <div class="h" style="font-size:88px;color:{T['sky']};margin-bottom:56px;">Explore → Verify → Cite</div>
-      <div style="display:flex;gap:28px;">
-        <div style="flex:1;padding:36px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.05);">
-          <div style="font-size:32px;font-weight:900;color:{T['sky']};margin-bottom:12px;">Explore</div>
-          <div style="font-size:24px;font-weight:700;margin-bottom:8px;">Can the agent find you?</div>
+      <div class="h" style="font-size:88px;color:{T['sky']};margin-bottom:80px;">Explore → Verify → Cite</div>
+      <div style="display:flex;gap:60px;">
+        <div style="flex:1;padding:40px;border-top:5px solid {T['sky']};background:rgba(52,82,219,0.05);">
+          <div style="font-size:32px;font-weight:900;color:{T['sky']};margin-bottom:16px;">Explore</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:12px;">Can the agent find you?</div>
           <div style="font-size:18px;color:{T['gray']};">Entity links · stable URIs · navigable KG</div></div>
-        <div style="flex:1;padding:36px;border-top:5px solid {T['leaf']};background:rgba(34,162,134,0.05);">
-          <div style="font-size:32px;font-weight:900;color:{T['leaf']};margin-bottom:12px;">Verify</div>
-          <div style="font-size:24px;font-weight:700;margin-bottom:8px;">Can the agent confirm you?</div>
+        <div style="flex:1;padding:40px;border-top:5px solid {T['leaf']};background:rgba(34,162,134,0.05);">
+          <div style="font-size:32px;font-weight:900;color:{T['leaf']};margin-bottom:16px;">Verify</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:12px;">Can the agent confirm you?</div>
           <div style="font-size:18px;color:{T['gray']};">Provenance · attribution · consistent IDs</div></div>
-        <div style="flex:1;padding:36px;border-top:5px solid {T['sand']};background:rgba(194,164,29,0.05);">
-          <div style="font-size:32px;font-weight:900;color:{T['sand']};margin-bottom:12px;">Cite</div>
-          <div style="font-size:24px;font-weight:700;margin-bottom:8px;">Can the agent cite you?</div>
+        <div style="flex:1;padding:40px;border-top:5px solid {T['sand']};background:rgba(194,164,29,0.05);">
+          <div style="font-size:32px;font-weight:900;color:{T['sand']};margin-bottom:16px;">Cite</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:12px;">Can the agent cite you?</div>
           <div style="font-size:18px;color:{T['gray']};">Stable URLs · canonical entities · machine-readable</div></div>
       </div>
     </div>
-    <div style="padding:20px 28px;border-left:5px solid {T['berry']};margin-bottom:40px;">
+    <div style="padding:24px 32px;border-left:5px solid {T['berry']};margin-top:40px;margin-bottom:60px;">
       <div style="font-size:24px;color:{T['gray']};">
         The pipeline has changed. The optimization targets have changed.<br>
         <span style="color:{T['white']};font-weight:700;">Most content strategies haven't.</span></div>
