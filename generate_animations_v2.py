@@ -43,21 +43,52 @@ ANIMATIONS = [
     </div>"""),
 
     # ── 02 WEIGHT PROBLEM ──────────────────────────────
-    ("02_context_bars", "dark", """
+    ("02_context_chaos", "dark", """
     <style>
-    @keyframes g{from{width:0}to{width:100%%}}
-    .bar{height:36px;border-radius:3px;animation:g 2s ease-out forwards;margin-bottom:16px;}
-    .label{font-size:16px;font-weight:700;margin-bottom:6px;}
+    @keyframes barEntropy{0%%{width:0;opacity:0}20%%{width:20%%;opacity:1}100%%{width:100%%;opacity:0.2}}
+    @keyframes chaosFlow{0%%{background-position:0%% 0%%}100%%{background-position:100%% 100%%}}
+    @keyframes signalDecay{0%%{opacity:1;transform:scale(1)}80%%{opacity:0.3;transform:scale(0.8)}100%%{opacity:0;transform:scale(0.5)}}
+    @keyframes glitch{0%%{transform:skew(0deg)}20%%{transform:skew(2deg)}40%%{transform:skew(-2deg)}60%%{transform:skew(1deg)}100%%{transform:skew(0deg)}}
+    
+    .row{margin-bottom:24px;position:relative;}
+    .label{font-size:16px;font-weight:700;color:%(sky)s;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+    .bar-chaos{height:12px;width:100%%;background:linear-gradient(90deg, %(sky)s, transparent);
+               animation:barEntropy 4s ease-in-out infinite;opacity:0;}
     </style>
-    <div style="padding:40px;font-family:%(font)s;color:white;">
-      <div class="label" style="color:%(sky)s;">KV Cache O(n²)</div>
-      <div class="bar" style="background:%(sky)s;animation-delay:0s;"></div>
-      <div class="label" style="color:%(sky)s;">Vector Index</div>
-      <div class="bar" style="background:%(sky)s;animation-delay:0.3s;max-width:70%%;"></div>
-      <div class="label" style="color:%(sky)s;">Device Memory</div>
-      <div class="bar" style="background:%(sky)s;animation-delay:0.6s;max-width:50%%;"></div>
-      <div class="label" style="color:%(berry)s;">Agent Context Loss</div>
-      <div class="bar" style="background:%(berry)s;animation-delay:0.9s;max-width:85%%;"></div>
+    <div style="padding:60px 80px;font-family:%(font)s;color:white;display:flex;flex-direction:column;height:100%%;">
+      <div style="position:relative;z-index:10;">
+        <div class="row" style="animation:glitch 2s infinite;">
+          <div class="label">KV Cache O(n²)</div>
+          <div class="bar-chaos" style="animation-delay:0s;"></div>
+        </div>
+        <div class="row" style="animation:glitch 2.5s infinite;">
+          <div class="label">Vector Search Space</div>
+          <div class="bar-chaos" style="animation-delay:0.5s;background:linear-gradient(90deg, %(sand)s, transparent);"></div>
+        </div>
+        <div class="row" style="animation:glitch 3s infinite;">
+          <div class="label">Neural Context Loss</div>
+          <div class="bar-chaos" style="animation-delay:1s;background:linear-gradient(90deg, %(berry)s, transparent);"></div>
+        </div>
+      </div>
+      
+      <div style="margin-top:auto;text-align:center;padding:40px;border:2px dashed %(gray)s;
+           animation:signalDecay 5s ease-in forwards;">
+        <div style="font-size:24px;font-weight:900;color:%(leaf)s;letter-spacing:2px;">RELEVANT SIGNAL</div>
+        <div style="font-size:14px;color:%(gray)s;margin-top:8px;">Burying the truth in the weight...</div>
+      </div>
+      
+      <!-- Rule 30 Style Background Pattern -->
+      <div style="position:absolute;right:0;top:0;width:100%%;height:100%%;opacity:0.1;z-index:1;overflow:hidden;pointer-events:none;">
+        <svg width="800" height="600" viewBox="0 0 800 600">
+          <defs>
+            <pattern id="chaosPattern" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+              <rect width="2" height="2" fill="%(sky)s" opacity="0.5" />
+              <rect x="10" y="10" width="4" height="4" fill="%(berry)s" opacity="0.3" />
+            </pattern>
+          </defs>
+          <rect width="800" height="600" fill="url(#chaosPattern)" />
+        </svg>
+      </div>
     </div>"""),
 
     # ── 03 QUERY → JOURNEY ─────────────────────────────

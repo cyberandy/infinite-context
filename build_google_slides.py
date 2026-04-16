@@ -16,7 +16,9 @@ SCOPES = ["https://www.googleapis.com/auth/presentations"]
 CREDS_FILE = "credentials.json"
 TOKEN_FILE = "token.pickle"
 
-REPO = "https://raw.githubusercontent.com/cyberandy/infinite-context/main"
+import subprocess
+commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('ascii').strip()
+REPO = f"https://raw.githubusercontent.com/cyberandy/infinite-context/{commit_hash}"
 
 # ── Slide order (matches slides_v2/) ──────────────────
 SLIDES = [
@@ -37,6 +39,7 @@ SLIDES = [
 
 # ── Curated GIF overlays (only the ones that earn their pixels) ──
 GIF_MAP = {
+    "02_weight_problem": "02_context_chaos",
     "06_turboquant": "06_turboquant_counter",
     "11_navigator": "11_pipeline_steps",
     "12_rlm_demo": "12_graph_nodes",
