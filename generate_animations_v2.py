@@ -96,20 +96,50 @@ ANIMATIONS = [
     <style>
     @keyframes slideL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
     @keyframes slideR{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes pulseNode{0%%{transform:scale(1);opacity:0.6}50%%{transform:scale(1.3);opacity:1}100%%{transform:scale(1);opacity:0.6}}
+    @keyframes traverse{
+      0%%{offset-distance:0%%;opacity:0}
+      10%%{opacity:1}
+      90%%{opacity:1}
+      100%%{offset-distance:100%%;opacity:0}
+    }
+    .node{width:10px;height:10px;background:%(sky)s;border-radius:50%%;position:absolute;opacity:0.6;}
+    .edge{stroke:%(sky)s;stroke-width:1;opacity:0.2;}
+    .traveler{
+      width:6px;height:6px;background:%(leaf)s;border-radius:50%%;
+      position:absolute;
+      offset-path: path('M 50 150 L 150 50 L 250 180 L 350 80 L 450 200');
+      animation: traverse 4s linear infinite;
+      box-shadow: 0 0 10px %(leaf)s;
+    }
     </style>
-    <div style="display:flex;gap:40px;padding:40px;font-family:%(font)s;color:white;height:100%%;">
+    <div style="display:flex;gap:40px;padding:40px;font-family:%(font)s;color:white;height:100%%;position:relative;">
+      <!-- Left side: The Old Model -->
       <div style="flex:1;padding:28px;border-top:4px solid %(gray)s;
-           animation:slideL 0.7s ease-out 0.3s forwards;opacity:0;">
+           animation:slideL 0.7s ease-out 0.3s forwards;opacity:0;z-index:10;background:rgba(13,13,13,0.8);">
         <div style="font-size:13px;font-weight:700;color:%(gray)s;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">The Old Model</div>
         <div style="font-size:17px;color:%(gray)s;line-height:2;">Stateless · Symmetric · One-shot</div>
-        <div style="font-size:20px;font-weight:700;margin-top:16px;animation:fadeIn 0.5s ease-out 1.2s forwards;opacity:0;">The document was the unit</div>
+        <div style="font-size:20px;font-weight:700;margin-top:16px;">The document was the unit.</div>
       </div>
+
+      <!-- Right side: The Agent Model -->
       <div style="flex:1;padding:28px;border-top:4px solid %(sky)s;
-           animation:slideR 0.7s ease-out 0.6s forwards;opacity:0;">
+           animation:slideR 0.7s ease-out 0.6s forwards;opacity:0;position:relative;z-index:10;background:rgba(13,13,13,0.8);">
         <div style="font-size:13px;font-weight:700;color:%(sky)s;letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;">The Agent Model</div>
         <div style="font-size:17px;color:%(gray)s;line-height:2;">Stateful · Asymmetric · Multi-hop</div>
-        <div style="font-size:20px;font-weight:700;margin-top:16px;animation:fadeIn 0.5s ease-out 1.5s forwards;opacity:0;">The entity is the unit</div>
+        <div style="font-size:20px;font-weight:700;margin-top:16px;">The entity is the unit.</div>
+        
+        <!-- Subtle Traversal Animation in background of this column -->
+        <div style="position:absolute;top:100px;left:0;width:100%%;height:200px;opacity:0.4;z-index:-1;">
+          <svg width="400" height="250" viewBox="0 0 400 250">
+            <path d="M 50 150 L 150 50 L 250 180 L 350 80 L 450 200" fill="none" stroke="%(sky)s" stroke-width="1" stroke-dasharray="4 4" opacity="0.2" />
+            <circle cx="50" cy="150" r="4" fill="%(sky)s" style="animation:pulseNode 2s infinite 0s"/>
+            <circle cx="150" cy="50" r="4" fill="%(sky)s" style="animation:pulseNode 2s infinite 0.5s"/>
+            <circle cx="250" cy="180" r="4" fill="%(sky)s" style="animation:pulseNode 2s infinite 1.0s"/>
+            <circle cx="350" cy="80" r="4" fill="%(sky)s" style="animation:pulseNode 2s infinite 1.5s"/>
+            <div class="traveler"></div>
+          </svg>
+        </div>
       </div>
     </div>"""),
 
@@ -117,23 +147,24 @@ ANIMATIONS = [
     ("04_three_shifts", "dark", """
     <style>
     @keyframes itemIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes arrowPulse{0%%{opacity:0.2}50%%{opacity:1}100%%{opacity:0.2}}
     </style>
-    <div style="padding:40px;font-family:%(font)s;color:white;">
+    <div style="padding:40px;font-family:%(font)s;color:white;height:100%%;">
       <div style="display:flex;gap:24px;margin-bottom:36px;align-items:flex-start;
-           animation:itemIn 0.6s ease-out 0.2s forwards;opacity:0;transform:translateY(20px);">
+           animation:itemIn 0.6s ease-out 0.2s forwards;opacity:0;">
         <div style="font-size:48px;font-weight:900;color:%(sky)s;line-height:1;min-width:70px;">01</div>
-        <div><div style="font-size:24px;font-weight:900;">Retrieval → Navigation</div>
-          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">Content competes on reachability</div></div></div>
+        <div><div style="font-size:24px;font-weight:900;">Retrieval <span style="animation:arrowPulse 2s infinite;">→</span> Navigation</div>
+          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">Reachability becomes the primary moat.</div></div></div>
       <div style="display:flex;gap:24px;margin-bottom:36px;align-items:flex-start;
-           animation:itemIn 0.6s ease-out 0.7s forwards;opacity:0;transform:translateY(20px);">
+           animation:itemIn 0.6s ease-out 0.7s forwards;opacity:0;">
         <div style="font-size:48px;font-weight:900;color:%(sky)s;line-height:1;min-width:70px;">02</div>
-        <div><div style="font-size:24px;font-weight:900;">Documents → Entities</div>
-          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">The unit of search is now an entity</div></div></div>
+        <div><div style="font-size:24px;font-weight:900;">Documents <span style="animation:arrowPulse 2s infinite;">→</span> Entities</div>
+          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">The unit of search logic is the node.</div></div></div>
       <div style="display:flex;gap:24px;align-items:flex-start;
-           animation:itemIn 0.6s ease-out 1.2s forwards;opacity:0;transform:translateY(20px);">
+           animation:itemIn 0.6s ease-out 1.2s forwards;opacity:0;">
         <div style="font-size:48px;font-weight:900;color:%(sky)s;line-height:1;min-width:70px;">03</div>
-        <div><div style="font-size:24px;font-weight:900;">One Model → A System</div>
-          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">Compression · Navigation · Structure</div></div></div>
+        <div><div style="font-size:24px;font-weight:900;">One Model <span style="animation:arrowPulse 2s infinite;">→</span> A System</div>
+          <div style="font-size:16px;color:%(gray)s;margin-top:4px;">Coordination between multiple layers.</div></div></div>
     </div>"""),
 
     # ── 05 COMPRESSION PARADOX (chapter) ───────────────

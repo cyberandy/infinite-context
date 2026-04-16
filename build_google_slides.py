@@ -40,6 +40,8 @@ SLIDES = [
 # ── Curated GIF overlays (only the ones that earn their pixels) ──
 GIF_MAP = {
     "02_weight_problem": "02_context_chaos",
+    "03_query_to_journey": "03_two_columns",
+    "04_three_shifts": "04_three_shifts",
     "06_turboquant": "06_turboquant_counter",
     "11_navigator": "11_pipeline_steps",
     "12_rlm_demo": "12_graph_nodes",
