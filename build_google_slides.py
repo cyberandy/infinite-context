@@ -42,13 +42,19 @@ GIF_MAP = {
     "02_weight_problem": "02_context_chaos",
     "03_query_to_journey": "03_two_columns",
     "04_three_shifts": "04_three_shifts",
+    "05_compression_paradox": "05_compression_reveal",
     "06_turboquant": "06_turboquant_counter",
+    "10b_context_timeline": "10b_context_timeline",
     "11_navigator": "11_pipeline_steps",
     "12_rlm_demo": "12_graph_nodes",
+    "15b_graphrag": "15b_graphrag_faceoff",
     "17_distillation": "17_distillation_pipeline",
     "20_floor_set": "20_checklist",
+    "21_moat_graph": "21_moat_graph",
     "24_ghost_citations": "24_ghost_counter",
     "26_consistency_not_crawling": "26_consistency_bars",
+    "27_explore_verify_cite": "27_explore_verify_cite",
+    "30_closing": "30_closing_cta",
 }
 
 EMU_PER_PX = 9525  # EMUs per pixel
