@@ -18,11 +18,12 @@ TOKEN_FILE = "token.pickle"
 
 import subprocess
 commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('ascii').strip()
-REPO = f"https://raw.githubusercontent.com/cyberandy/infinite-context/{commit_hash}"
+REPO = f"https://raw.githubusercontent.com/cyberandy/infinite-context/main"
 
 # ── Slide order (matches slides_v2/) ──────────────────
 SLIDES = [
-    "01_title", "02_weight_problem", "03_query_to_journey", "04_three_shifts",
+    "01_title", "02_weight_problem", "02b_more_context",
+    "03_query_journey", "04_three_shifts",
     "04b_memory_layer",
     "05_compression_paradox", "06_turboquant", "07_silent_ranking", "08_zero_bias",
     "09_quant_landscape", "10_turbo_demo",
@@ -40,7 +41,8 @@ SLIDES = [
 # ── Curated GIF overlays (only the ones that earn their pixels) ──
 GIF_MAP = {
     "02_weight_problem": "02_context_chaos",
-    "03_query_to_journey": "03_two_columns",
+    "02b_more_context": "02b_more_context",
+    "03_query_journey": "03_two_columns",
     "04_three_shifts": "04_three_shifts",
     "05_compression_paradox": "05_compression_reveal",
     "06_turboquant": "06_turboquant_counter",
@@ -136,6 +138,7 @@ def main():
         slide_obj = all_slides[idx]
         page_id = slide_obj["objectId"]
         png_url = f"{REPO}/slides_v2/{slide_name}.png"
+        print(f"  Setting background: {png_url}")
 
         # Set background
         requests.append({

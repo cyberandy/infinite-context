@@ -105,6 +105,43 @@ def slide_02():
     <div class="h" style="font-size:84px;margin-bottom:auto;">Why Context Has<br>a Weight Problem</div>
     <div style="display:flex;gap:24px;margin-bottom:40px;">{cards}</div>""", ca)
 
+def slide_02b():
+    """NEW — Why more context is not enough — DARK"""
+    ca = svg_grid(G30, 45, 8, T['berry'], 0.04, 1400, 0)
+    return dark(f"""
+    <div class="section">Act I — The Context Explosion</div>
+    <div class="h" style="font-size:80px;margin-bottom:56px;">Why More Context<br><span style="color:{T['berry']};">Is Not Enough</span></div>
+    <div style="display:flex;gap:32px;flex:1;align-items:stretch;">
+      <div style="flex:1;padding:40px;border-left:5px solid {T['sky']};background:rgba(52,82,219,0.04);">
+        <div style="font-size:80px;font-weight:900;color:{T['sky']};line-height:0.9;margin-bottom:20px;">O(n²)</div>
+        <div style="font-size:28px;font-weight:900;margin-bottom:12px;">The Quadratic Wall</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:1.6;">
+          More context gets expensive fast.<br>
+          KV cache grows quadratically.<br>
+          <span style="color:{T['white']};font-weight:700;">Cost scales faster than value.</span></div>
+      </div>
+      <div style="flex:1;padding:40px;border-left:5px solid {T['sand']};background:rgba(194,164,29,0.04);">
+        <div style="font-size:80px;font-weight:900;color:{T['sand']};line-height:0.9;margin-bottom:20px;">↓</div>
+        <div style="font-size:28px;font-weight:900;margin-bottom:12px;">Context Rot</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:1.6;">
+          More input can mean less understanding.<br>
+          Signal drowns in noise.<br>
+          <span style="color:{T['white']};font-weight:700;">Accuracy degrades with length.</span></div>
+      </div>
+      <div style="flex:1;padding:40px;border-left:5px solid {T['berry']};background:rgba(213,84,113,0.04);">
+        <div style="font-size:80px;font-weight:900;color:{T['berry']};line-height:0.9;margin-bottom:20px;">≠</div>
+        <div style="font-size:28px;font-weight:900;margin-bottom:12px;">Same Problem, Bigger Window</div>
+        <div style="font-size:22px;color:{T['gray']};line-height:1.6;">
+          The bottleneck shifts from capacity<br>
+          to selection and navigation.<br>
+          <span style="color:{T['white']};font-weight:700;">You need structure, not space.</span></div>
+      </div>
+    </div>
+    <div style="padding:16px 28px;border-left:4px solid {T['berry']};margin-top:auto;margin-bottom:40px;">
+      <div style="font-size:22px;color:{T['gray']};font-style:italic;">
+        The question was never "how much can we fit" — it's "how do we find what matters."</div>
+    </div>""", ca)
+
 def slide_03():
     """FIX — Two-column, but BOLD treatment"""
     ca = svg_grid(G30, 70, 12, T['sky'], 0.15, 800, 0)
@@ -899,7 +936,8 @@ def slide_30():
 
 ALL_SLIDES = [
     ("01_title.png", slide_01), ("02_weight_problem.png", slide_02),
-    ("03_query_to_journey.png", slide_03), ("04_three_shifts.png", slide_04),
+    ("02b_more_context.png", slide_02b),
+    ("03_query_journey.png", slide_03), ("04_three_shifts.png", slide_04),
     ("04b_memory_layer.png", slide_04b),
     ("05_compression_paradox.png", slide_05), ("06_turboquant.png", slide_06),
     ("07_silent_ranking.png", slide_07), ("08_zero_bias.png", slide_08),

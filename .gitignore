@@ -18,3 +18,4 @@ __pycache__/
 *.pyc
 /tmp/
 credentials.json
+token.pickle
