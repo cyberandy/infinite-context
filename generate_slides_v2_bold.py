@@ -205,7 +205,7 @@ def slide_09():
 def slide_10():
     return light(f"""
     <div class="section">Paper 1 Takeaway</div>
-    <div class="h" style="font-size:80px;line-height:1.2;">Structue matters when it<br><span style="color:{T['sky']};">changes retrieval behavior,</span><br>not only when it validates markup.</div>
+    <div class="h" style="font-size:80px;line-height:1.2;">Structure matters when it<br><span style="color:{T['sky']};">changes retrieval behavior,</span><br>not only when it validates markup.</div>
     <div class="bar" style="width:100px;background:{T['sky']};"></div>""")
 
 # ═══════════════════════════════════════════════════════════

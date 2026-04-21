@@ -47,7 +47,7 @@ GIF_MAP = {
     "25_comparison": "15b_graphrag_faceoff",
     "26_behavioral": "17_distillation_pipeline",
     "28_new_workflow": "26_consistency_bars",
-    "29_audit": "20_floor_set",
+    "29_audit": "20_checklist",
     "31_thesis": "30_closing_cta",
 }
 
@@ -100,16 +100,15 @@ def main():
     all_slides = pres["slides"]
     print(f"  ✓ Total slides: {len(all_slides)}")
 
-    # 4. Set backgrounds + GIF overlays
-    requests = []
+    # 4. Set backgrounds + GIF overlays (one by one for stability)
     for idx, slide_name in enumerate(SLIDES):
         slide_obj = all_slides[idx]
         page_id = slide_obj["objectId"]
         png_url = f"{REPO}/slides_v2/{slide_name}.png"
-        print(f"  ({idx+1}/{len(SLIDES)}) Mapping {slide_name}...")
+        print(f"  ({idx+1}/{len(SLIDES)}) Setting {slide_name}...", end=" ", flush=True)
 
         # Background PNG
-        requests.append({
+        requests = [{
             "updatePageProperties": {
                 "objectId": page_id,
                 "pageProperties": {
@@ -119,7 +118,7 @@ def main():
                 },
                 "fields": "pageBackgroundFill",
             }
-        })
+        }]
 
         # Opt-in GIF Overlay
         if slide_name in GIF_MAP:
@@ -137,12 +136,14 @@ def main():
                 }
             })
 
-    # Submit in batches
-    batch_size = 50
-    for i in range(0, len(requests), batch_size):
-        batch = requests[i:i + batch_size]
-        print(f"  Applying batch {i//batch_size + 1}...")
-        service.presentations().batchUpdate(presentationId=pres_id, body={"requests": batch}).execute()
+        try:
+            service.presentations().batchUpdate(presentationId=pres_id, body={"requests": requests}).execute()
+            print("✓")
+        except Exception as e:
+            print(f"FAILED on {slide_name}")
+            print(f"  Error: {e}")
+            # Try to continue without background/image for this slide
+            continue
 
     print(f"\n✓ Presentation Ready: https://docs.google.com/presentation/d/{pres_id}/edit")
 
