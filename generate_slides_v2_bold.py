@@ -341,11 +341,51 @@ def slide_21():
 def slide_22():
     return light(f"""
     <div class="section">Benchmark Results</div>
-    <div class="h" style="font-size:80px;">Why Graphs Win When<br>Evidence is Scattered</div>
-    <div class="bar" style="width:100px;background:{T['sky']};"></div>
-    <div style="font-size:28px;color:{T['gray']};margin-top:40px;max-width:900px;">
-      Across distant parts of the corpus, flat retrieval weakens.<br>
-      <b>Graph-guided navigation</b> maintains a clear advantage.</div>""")
+    <div class="h" style="font-size:64px;margin-bottom:40px;">Where Adaptive Navigation<br>Wins Most Clearly</div>
+    <div style="display:flex;gap:60px;align-items:flex-start;">
+      <!-- LEFT: Big number -->
+      <div style="flex:0 0 280px;">
+        <div style="font-size:160px;font-weight:900;line-height:0.85;letter-spacing:-8px;color:{T['sky']};">71%</div>
+        <div style="font-size:16px;color:{T['gray']};margin-top:16px;line-height:1.4;">
+          Win rate on Complex Reasoning<br>with 11+ chunks<br>
+          <span style="font-size:13px;color:{T['gray']};opacity:0.7;">LLM controller vs heuristic traversal</span></div>
+      </div>
+      <!-- RIGHT: Table -->
+      <div style="flex:1;">
+        <table style="width:100%;border-collapse:collapse;font-size:17px;color:{T['dark2']};">
+          <tr style="border-bottom:3px solid {T['dark2']};">
+            <th style="text-align:left;padding:12px 16px;font-weight:900;font-size:14px;letter-spacing:1px;text-transform:uppercase;">Evidence Distribution</th>
+            <th style="text-align:center;padding:12px 16px;font-weight:900;font-size:14px;letter-spacing:1px;text-transform:uppercase;">Win Rate</th>
+            <th style="text-align:center;padding:12px 16px;font-weight:900;font-size:14px;letter-spacing:1px;text-transform:uppercase;">F1 Gain</th>
+          </tr>
+          <tr style="border-bottom:1px solid #e0e0e0;">
+            <td style="padding:14px 16px;">Concentrated (1–5)</td>
+            <td style="text-align:center;padding:14px 16px;font-weight:700;">62%</td>
+            <td style="text-align:center;padding:14px 16px;color:{T['sky']};font-weight:700;">+1.85pp</td>
+          </tr>
+          <tr style="border-bottom:1px solid #e0e0e0;">
+            <td style="padding:14px 16px;">Scattered (6–10)</td>
+            <td style="text-align:center;padding:14px 16px;font-weight:700;">65%</td>
+            <td style="text-align:center;padding:14px 16px;color:{T['sky']};font-weight:700;">+3.21pp</td>
+          </tr>
+          <tr style="border-bottom:1px solid #e0e0e0;">
+            <td style="padding:14px 16px;">Highly scattered (11+)</td>
+            <td style="text-align:center;padding:14px 16px;font-weight:700;">62%</td>
+            <td style="text-align:center;padding:14px 16px;color:{T['sky']};font-weight:700;">+2.42pp</td>
+          </tr>
+          <tr style="border-bottom:3px solid {T['dark2']};background:rgba(52,82,219,0.06);">
+            <td style="padding:14px 16px;font-weight:900;">Complex Reasoning 11+</td>
+            <td style="text-align:center;padding:14px 16px;font-weight:900;color:{T['sky']};font-size:20px;">71%</td>
+            <td style="text-align:center;padding:14px 16px;font-weight:900;color:{T['sky']};font-size:20px;">+4.55pp</td>
+          </tr>
+        </table>
+        <div style="font-size:14px;color:{T['gray']};margin-top:20px;line-height:1.5;">
+          Strongest subgroup result in the paper. When evidence is highly scattered,<br>
+          adaptive navigation beats fixed traversal most clearly.</div>
+        <div style="font-size:12px;color:{T['gray']};opacity:0.5;margin-top:12px;">
+          RLM-on-KG, 519-question evaluation, LLM controller vs heuristic traversal</div>
+      </div>
+    </div>""")
 
 def slide_23():
     return dark(f"""
