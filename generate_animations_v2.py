@@ -188,7 +188,7 @@ ANIMATIONS = [
     </div>"""),
 
     # ── 06 TURBOQUANT ──────────────────────────────────
-    ("06_turboquant_counter", "light", """
+    ("06_turboquant_counter", "dark", """
     <style>
     @keyframes count45{0%%{content:'0.0×'}25%%{content:'1.2×'}50%%{content:'2.8×'}75%%{content:'3.9×'}100%%{content:'4.5×'}}
     @keyframes count8{0%%{content:'0×'}25%%{content:'2×'}50%%{content:'4×'}75%%{content:'6×'}100%%{content:'8×'}}
@@ -197,7 +197,7 @@ ANIMATIONS = [
     .stat::after{animation-duration:1.5s;animation-fill-mode:forwards;animation-timing-function:steps(4);}
     .s1::after{content:'4.5×';animation-name:count45;}
     .s2::after{content:'8×';animation-name:count8;animation-delay:0.5s;}
-    .s3{animation:fadeIn 0.8s ease-out 1.2s forwards;opacity:0;color:%(dark)s;}
+    .s3{animation:fadeIn 0.8s ease-out 1.2s forwards;opacity:0;color:%(white)s;}
     </style>
     <div style="display:flex;gap:60px;padding:60px;font-family:%(font)s;">
       <div><div class="stat s1"></div><div style="font-size:18px;color:%(gray)s;margin-top:8px;">smaller</div></div>
