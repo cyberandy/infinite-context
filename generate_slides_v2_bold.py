@@ -221,7 +221,7 @@ def slide_11():
     <div style="font-size:28px;color:{T['gray']};margin-top:40px;max-width:800px;">
       Bigger context requires compression.<br>
       But poor compression silently breaks retrieval.<br>
-      <span style="color:{T['berry']};">Scale without geometry is fragile.</span></div>""", ca)
+      <span style="color:{T['berry']};">Your content is still there. The system just can't find it anymore.</span></div>""", ca)
 
 def slide_12():
     return dark(f"""
@@ -239,16 +239,18 @@ def slide_13():
     <div class="bar" style="width:100px;background:{T['berry']};"></div>
     <div style="font-size:28px;color:{T['gray']};margin-top:40px;max-width:900px;">
       The system still returns results. No crash. No warning.<br>
-      But <b>similarity drifts</b> and rankings degrade silently.</div>""")
+      But similarity drifts and rankings degrade silently.<br>
+      <b>This is how content disappears from AI answers without anyone noticing.</b></div>""")
 
 def slide_14():
     return dark(f"""
-    <div class="section">The Solution</div>
+    <div class="section">The Fix</div>
     <div class="h" style="font-size:120px;">Zero-Bias<br>Correction</div>
     <div class="bar" style="width:100px;background:{T['leaf']};"></div>
     <div style="font-size:28px;color:{T['gray']};margin-top:40px;max-width:900px;">
-      TurboQuant corrects the directional bias of quantization.<br>
-      <b>Trustworthy similarity</b> even under aggressive compression.</div>""")
+      Compression bends the ruler that measures relevance.<br>
+      TurboQuant straightens it back.<br>
+      <b>Same speed gains, trustworthy rankings.</b></div>""")
 
 def slide_15():
     return light(f"""
@@ -257,13 +259,13 @@ def slide_15():
     <div style="display:flex;gap:32px;">
       <div style="flex:1;padding:32px;background:{T['gray_light']};">
         <div style="font-size:18px;font-weight:900;color:{T['sky']};">UNBIASED</div>
-        <div style="font-size:14px;margin-top:8px;">Geometric accuracy</div></div>
+        <div style="font-size:14px;margin-top:8px;">Rankings stay accurate</div></div>
       <div style="flex:1;padding:32px;background:{T['gray_light']};">
         <div style="font-size:18px;font-weight:900;color:{T['sky']};">DEPLOYABLE</div>
-        <div style="font-size:14px;margin-top:8px;">GPU-native performance</div></div>
+        <div style="font-size:14px;margin-top:8px;">Runs on production GPUs</div></div>
       <div style="flex:1;padding:32px;background:{T['gray_light']};">
         <div style="font-size:18px;font-weight:900;color:{T['sky']};">OBLIVIOUS</div>
-        <div style="font-size:14px;margin-top:8px;">No data-specific tuning</div></div>
+        <div style="font-size:14px;margin-top:8px;">Works without retraining</div></div>
     </div>
     <div style="font-size:28px;font-weight:900;margin-top:48px;">It’s about combining speed with reliability.</div>""")
 
