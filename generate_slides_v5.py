@@ -374,6 +374,43 @@ def slide_01():
     """
     return base_html(body, ca)
 
+def slide_02_about():
+    """About — Andrea Volpini, CEO of WordLift"""
+    grid = generate_rule30_grid(rows=30, cols=60)
+    ca = ca_grid_to_svg(grid, cell_size=10, opacity=0.06, x_offset=1300, y_offset=150)
+    ca += f'''
+    <polygon points="1920,0 1920,1080 1400,1080" fill="{TOKENS['sky']}" opacity="0.08" />
+    '''
+    body = f"""
+    <div style="display:flex; flex-direction:column; height:100%;">
+      <div>
+        <div class="section-label">About</div>
+        <h1 class="headline" style="font-size:72px; margin-top:24px;">Andrea Volpini</h1>
+        <div style="font-size:28px; font-weight:400; color:{TOKENS['gray_dark']}; margin-top:12px;">CEO, WordLift</div>
+        <div style="font-size:24px; font-weight:400; color:{TOKENS['sky']}; margin-top:8px; font-style:italic;">Building the memory layer for the Agentic Web</div>
+      </div>
+
+      <div style="margin-top:64px;">
+        <div style="font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:{TOKENS['gray']}; margin-bottom:28px;">Trusted by</div>
+        <div style="display:flex; gap:32px; flex-wrap:wrap;">
+          <div style="padding:18px 32px; border:2px solid {TOKENS['gray_light']}; font-size:20px; font-weight:700; color:{TOKENS['gray_dark']};">Zurich Insurance</div>
+          <div style="padding:18px 32px; border:2px solid {TOKENS['gray_light']}; font-size:20px; font-weight:700; color:{TOKENS['gray_dark']};">Morgan Stanley</div>
+          <div style="padding:18px 32px; border:2px solid {TOKENS['gray_light']}; font-size:20px; font-weight:700; color:{TOKENS['gray_dark']};">L'Oréal</div>
+          <div style="padding:18px 32px; border:2px solid {TOKENS['gray_light']}; font-size:20px; font-weight:700; color:{TOKENS['gray_dark']};">Financial Times</div>
+          <div style="padding:18px 32px; border:2px solid {TOKENS['gray_light']}; font-size:20px; font-weight:700; color:{TOKENS['gray_dark']};">EssilorLuxottica</div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:8px; height:8px; background:{TOKENS['sky']}; border-radius:50%;"></div>
+          <div style="font-size:18px; color:{TOKENS['gray_dark']};">Winner — Zurich Agentic AI Hyperchallenge (Marketing & Sales)</div>
+        </div>
+      </div>
+    </div>
+    """
+    return base_html(body, ca)
+
 def slide_02():
     """Act I — Why Context Has a Weight Problem"""
     grid = generate_rule30_grid(rows=30, cols=60)
@@ -875,24 +912,25 @@ def slide_19():
 
 SLIDE_GENERATORS = [
     ("slide_01_title.png", slide_01),
-    ("slide_02_weight.png", slide_02),
-    ("slide_03_journey.png", slide_03),
-    ("slide_04_shifts.png", slide_04),
-    ("slide_05_paradox.png", slide_05),
-    ("slide_06_turboquant.png", slide_06),
-    ("slide_07_rankings.png", slide_07),
-    ("slide_08_realignment.png", slide_08),
-    ("slide_09_landscape.png", slide_09),
-    ("slide_10_explores.png", slide_10),
-    ("slide_11_advantage.png", slide_11),
-    ("slide_12_discovery.png", slide_12),
-    ("slide_13_gap.png", slide_13),
-    ("slide_14_ondevice.png", slide_14),
-    ("slide_15_training.png", slide_15),
-    ("slide_16_floor.png", slide_16),
-    ("slide_17_moat.png", slide_17),
-    ("slide_18_connected.png", slide_18),
-    ("slide_19_thesis.png", slide_19),
+    ("slide_02_about.png", slide_02_about),
+    ("slide_03_weight.png", slide_02),
+    ("slide_04_journey.png", slide_03),
+    ("slide_05_shifts.png", slide_04),
+    ("slide_06_paradox.png", slide_05),
+    ("slide_07_turboquant.png", slide_06),
+    ("slide_08_rankings.png", slide_07),
+    ("slide_09_realignment.png", slide_08),
+    ("slide_10_landscape.png", slide_09),
+    ("slide_11_explores.png", slide_10),
+    ("slide_12_advantage.png", slide_11),
+    ("slide_13_discovery.png", slide_12),
+    ("slide_14_gap.png", slide_13),
+    ("slide_15_ondevice.png", slide_14),
+    ("slide_16_training.png", slide_15),
+    ("slide_17_floor.png", slide_16),
+    ("slide_18_moat.png", slide_17),
+    ("slide_19_connected.png", slide_18),
+    ("slide_20_thesis.png", slide_19),
 ]
 
 
@@ -913,7 +951,7 @@ async def render_slides(only=None, preview=False):
             if only and i != only:
                 continue
 
-            print(f"  [{i:02d}/19] Rendering {filename}...", end=" ", flush=True)
+            print(f"  [{i:02d}/20] Rendering {filename}...", end=" ", flush=True)
             html = generator()
             await page.set_content(html, wait_until="networkidle")
             output_path = SLIDES_DIR / filename
