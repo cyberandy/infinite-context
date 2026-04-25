@@ -411,6 +411,89 @@ def slide_02_about():
     """
     return base_html(body, ca)
 
+def slide_02_about_dark():
+    """About — Andrea Volpini, CEO of WordLift (DARK variant)"""
+    grid = generate_rule30_grid(rows=30, cols=60)
+    ca = ca_grid_to_svg(grid, cell_size=10, active_color="#5A7AFF",
+                        inactive_color="#1A1A1A", opacity=0.12,
+                        x_offset=1300, y_offset=150)
+    ca += f'''
+    <polygon points="1920,0 1920,1080 1400,1080" fill="{TOKENS['sky']}" opacity="0.10" />
+    '''
+    body = f"""
+    <div style="display:flex; flex-direction:column; height:100%;">
+      <div>
+        <div style="font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:{TOKENS['sky']}; margin-bottom:16px;">About</div>
+        <h1 style="font-size:72px; font-weight:800; line-height:1.05; letter-spacing:-2px; color:#FFFFFF; margin-top:24px;">Andrea Volpini</h1>
+        <div style="font-size:28px; font-weight:400; color:#999999; margin-top:12px;">CEO, WordLift</div>
+        <div style="font-size:24px; font-weight:400; color:{TOKENS['sky']}; margin-top:8px; font-style:italic;">Building the memory layer for the Agentic Web</div>
+      </div>
+
+      <div style="margin-top:64px;">
+        <div style="font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:4px; color:#666666; margin-bottom:28px;">Trusted by</div>
+        <div style="display:flex; gap:32px; flex-wrap:wrap;">
+          <div style="padding:18px 32px; border:2px solid #333333; font-size:20px; font-weight:700; color:#CCCCCC;">Zurich Insurance</div>
+          <div style="padding:18px 32px; border:2px solid #333333; font-size:20px; font-weight:700; color:#CCCCCC;">Morgan Stanley</div>
+          <div style="padding:18px 32px; border:2px solid #333333; font-size:20px; font-weight:700; color:#CCCCCC;">L'Oréal</div>
+          <div style="padding:18px 32px; border:2px solid #333333; font-size:20px; font-weight:700; color:#CCCCCC;">Financial Times</div>
+          <div style="padding:18px 32px; border:2px solid #333333; font-size:20px; font-weight:700; color:#CCCCCC;">EssilorLuxottica</div>
+        </div>
+      </div>
+
+      <div style="margin-top:auto;">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div style="width:8px; height:8px; background:{TOKENS['sky']}; border-radius:50%;"></div>
+          <div style="font-size:18px; color:#999999;">Winner — Zurich Agentic AI Hyperchallenge (Marketing & Sales)</div>
+        </div>
+      </div>
+    </div>
+    """
+    # Dark base: inline override of bg/fg
+    dark_html = f"""<!DOCTYPE html>
+<html>
+<head>
+<style>
+  * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+  body {{
+    width: {TOKENS['width']}px;
+    height: {TOKENS['height']}px;
+    background: #0A0A0A;
+    font-family: {TOKENS['font']};
+    color: #FFFFFF;
+    overflow: hidden;
+    position: relative;
+  }}
+  .ca-layer {{
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }}
+  .content {{
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 80px 100px;
+    display: flex;
+    flex-direction: column;
+  }}
+</style>
+</head>
+<body>
+  <div class="ca-layer">
+    <svg width="{TOKENS['width']}" height="{TOKENS['height']}" xmlns="http://www.w3.org/2000/svg">
+      {ca}
+    </svg>
+  </div>
+  <div class="content">
+    {body}
+  </div>
+</body>
+</html>"""
+    return dark_html
+
 def slide_02():
     """Act I — Why Context Has a Weight Problem"""
     grid = generate_rule30_grid(rows=30, cols=60)
@@ -913,6 +996,7 @@ def slide_19():
 SLIDE_GENERATORS = [
     ("slide_01_title.png", slide_01),
     ("slide_02_about.png", slide_02_about),
+    ("slide_02_about_dark.png", slide_02_about_dark),
     ("slide_03_weight.png", slide_02),
     ("slide_04_journey.png", slide_03),
     ("slide_05_shifts.png", slide_04),
